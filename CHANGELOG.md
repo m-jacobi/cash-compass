@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+
+* The German translation for the Material Paginator implemented
+
 ## 0.1.0
 
 ### Initial Release (Beta) :rocket: :metal:
