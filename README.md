@@ -25,6 +25,11 @@ Navigate your finances with ease using Cash Compass - the smart and intuitive bu
 - [ ] CSV import and export
 - [ ] PDF import and export
 - [ ] Local backup
+- [ ] Windows Deployment
+- [ ] Code Signing
+  - [ ] macOS
+  - [ ] Windows
+  - [ ] Linux 
 - [ ] Tauri update function
 ... and more features :-)
 
