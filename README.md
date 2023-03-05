@@ -9,6 +9,10 @@ Navigate your finances with ease using Cash Compass - the smart and intuitive bu
 - [x] Filtering the payments
 - [x] Filtering the categories
 
+### Changelog
+
+* [Cash Compass Changelog](CHANGELOG.md)
+
 ## Coming Soon
 
 - [ ] More testing
@@ -23,10 +27,6 @@ Navigate your finances with ease using Cash Compass - the smart and intuitive bu
 - [ ] Local backup
 - [ ] Tauri update function
 ... and more features :-)
-
-### Changelog
-
-* [Cash Compass Changelog](CHANGELOG.md)
 
 ## Development instructions
 
