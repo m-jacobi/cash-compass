@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>{{data.id ? 'Kategorie bearbeiten' : 'Neue Kategorie erstellen'}}</h2>
+<form class="form-wrapper" [formGroup]="categoryForm">
+    <mat-form-field appearance="fill">
+        <mat-label>Kategorie</mat-label>
+        <input matInput formControlName="name" placeholder="Kategorie">
+        <mat-error *ngIf="formControl['name'].invalid && formControl['name'].touched">
+            <label *ngIf="formControl['name'].errors && formControl['name'].errors['required']">Dies ist ein Pflichtfeld.</label>
+        </mat-error>
+    </mat-form-field>
+    <div mat-dialog-actions>
+        <button type="submit" mat-raised-button color="primary" (click)="saveCategory()" [disabled]="categoryForm.invalid">Speichern</button>
+        <button mat-button class="mat-focus-indicator mat-raised-button mat-button-base mat-raised" (click)="onClose()">Abburch</button>
+    </div>
+</form>
+
+

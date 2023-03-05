@@ -1,0 +1,56 @@
+table {
+  width: 100%;
+}
+
+td, th {
+  width: 25%;
+}
+
+.mat-footer-cell {
+    font-weight: bold;
+}
+
+.mat-footer-cell.income {
+    font-weight: normal;
+    color: #00cc00;
+}
+
+
+.mat-footer-cell.expense {
+    font-weight: normal;
+    color: #cc0000;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+.primary{
+    height: 50px;
+    justify-content:right;
+  }
+
+.filter{
+   //display: flex;
+   //justify-content: start;
+   display:flex;
+   //justify-content: space-around;
+}
+
+.filter-table {
+    flex-basis: 300px;
+    justify-content: flex-end;
+    margin-right: 40px;
+    width: 200px;
+}
+
+.filter-income-expense {
+    margin-right: 50px;
+    width: 150px;
+}
+
+.filter-date {
+    width: 150px;
+    margin-right: 15px;
+}

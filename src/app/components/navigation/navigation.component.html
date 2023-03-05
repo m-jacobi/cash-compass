@@ -1,0 +1,25 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #menu class="sidenav" fixedInViewport="true"
+        [attr.role]="(breakpoint$ | async) ? 'dialog' : 'navigation'"
+        [mode]="(breakpoint$ | async) ? 'over' : 'side'"
+        [opened]="!(breakpoint$ | async)">
+        <mat-toolbar>Cash Compass</mat-toolbar>
+        <mat-nav-list>
+            <a mat-list-item routerLink="payments">Buchungen</a>
+            <a mat-list-item routerLink="categories">Kategorien</a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar color="primary">
+            <button type="button" *ngIf="breakpoint$ | async" mat-icon-button
+                (click)="menu.toggle()" >
+                <mat-icon>menu</mat-icon>
+            </button>
+            <button mat-flat-button class="toolbar-button" (click)="openCreatePaymentDialog()">Neue Buchung</button>
+            <button mat-flat-button class="toolbar-button"(click)="openCreateCategoryDialog()">Neue Kategorie</button>
+        </mat-toolbar>
+        <div class="content">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>
