@@ -11,7 +11,7 @@ Navigate your finances with ease using Cash Compass - the smart and intuitive bu
 
 ### Changelog
 
-* [Cash Compass Changelog](CHANGELOG.md)
+- [Cash Compass Changelog](CHANGELOG.md)
 
 ## Coming Soon
 
@@ -29,9 +29,9 @@ Navigate your finances with ease using Cash Compass - the smart and intuitive bu
 - [ ] Code Signing
   - [ ] macOS
   - [ ] Windows
-  - [ ] Linux 
+  - [ ] Linux
 - [ ] Tauri update function
-... and more features :-)
+... and more features :blush:
 
 ## Development instructions
 
@@ -56,4 +56,3 @@ yarn tauri dev
 ```bash
 yarn tauri build
 ```
-
