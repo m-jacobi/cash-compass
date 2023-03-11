@@ -6,7 +6,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { PaymentModalDialogComponent } from './payment-modal-dialog.component';
 
 
-describe('CreatePaymentModalDialogComponent', () => {
+describe('PaymentModalDialogComponent', () => {
     let component: PaymentModalDialogComponent;
     let fixture: ComponentFixture<PaymentModalDialogComponent>;
 

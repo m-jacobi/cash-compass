@@ -18,7 +18,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -32,6 +32,7 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { NotificationComponent } from './components/notification/notification.component';
 import { CategoryModalDialogComponent } from './dialog/category-modal-dialog/category-modal-dialog.component';
 import { PaymentModalDialogComponent } from './dialog/payment-modal-dialog/payment-modal-dialog.component';
+import { getMatPaginatorIntl } from './utils/paginator-intl';
 
 
 @NgModule({
@@ -87,6 +88,11 @@ import { PaymentModalDialogComponent } from './dialog/payment-modal-dialog/payme
             provide: MAT_DATE_LOCALE,
             useValue: 'de'
         },
+        {
+            provide: MatPaginatorIntl,
+            useValue: getMatPaginatorIntl()
+        },
+
     ],
     bootstrap: [AppComponent]
 })
