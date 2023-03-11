@@ -6,7 +6,7 @@
 
 ## 0.1.0
 
-### Initial Release (Beta) :rocket: :metal:
+### Initial Release :rocket: :metal:
 
 * Payments can be created, edited and removed again
 * New categories can be added, edited and removed again
