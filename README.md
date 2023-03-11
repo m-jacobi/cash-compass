@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./docs/cash-compass-logo.png" height="100" />
+</p>
+
 # Cash Compass [![license](https://img.shields.io/github/license/DAVFoundation/captain-n3m0.svg?style=flat)](https://github.com/m-jacobi/cash-compass/blob/develop/LICENSE.md)
 
 Navigate your finances with ease using Cash Compass - the smart and intuitive budget planner app!
