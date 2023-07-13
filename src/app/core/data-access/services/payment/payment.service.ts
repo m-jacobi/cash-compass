@@ -1,33 +1,35 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/tauri';
 import { from, Observable, ReplaySubject } from 'rxjs';
-import { NOTIFICATION_TYPE } from '../enum/notification-type.enum';
-import { Payment } from '../models/payment.model';
-import { NotificationService } from './notification.service';
+import { PaymentModel } from 'src/app/core/models/payment.model';
+import { NOTIFICATION_TYPE } from 'src/app/enum/notification-type.enum';
+import { NotificationService } from 'src/app/services/notification.service';
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentService {
 
-    private paymentsSubject: ReplaySubject<Payment[]>;
+    private paymentsSubject: ReplaySubject<PaymentModel[]>;
 
     constructor(private notificationService: NotificationService) {
-        this.paymentsSubject = new ReplaySubject<Payment[]>(1);
+        this.paymentsSubject = new ReplaySubject<PaymentModel[]>(1);
         this.fetchPayments();
     }
 
     private fetchPayments(): void {
-        from(invoke<Payment[]>('get_payments')).subscribe((payments: Payment[]) => {
+        from(invoke<PaymentModel[]>('get_payments')).subscribe((payments: PaymentModel[]) => {
             this.paymentsSubject.next(JSON.parse(payments.toString()));
         });
     }
 
-    public getPayments(): Observable<Payment[]> {
+    public getPayments(): Observable<PaymentModel[]> {
         return this.paymentsSubject.asObservable();
     }
 
-    public createPayment(payment: Payment): void {
+    public createPayment(payment: PaymentModel): void {
         invoke('create_payment', {
             description: payment.description,
             amount: payment.amount,
@@ -53,7 +55,7 @@ export class PaymentService {
         this.fetchPayments();
     }
 
-    public updatePayment(payment: Payment): void {
+    public updatePayment(payment: PaymentModel): void {
         invoke('update_payment', {
             id: payment.id,
             description: payment.description,

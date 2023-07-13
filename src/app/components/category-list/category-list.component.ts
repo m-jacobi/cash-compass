@@ -5,15 +5,14 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subject, takeUntil } from 'rxjs';
 
-
+import { CategoryService } from 'src/app/core/data-access/services/category/category.service';
+import { PaymentService } from 'src/app/core/data-access/services/payment/payment.service';
+import { CategoryModel, EMPTY_CATEGORY } from '../../core/models/category.model';
+import { PaymentModel } from '../../core/models/payment.model';
 import { CategoryModalDialogComponent } from '../../dialog/category-modal-dialog/category-modal-dialog.component';
 import { NOTIFICATION_TYPE } from '../../enum/notification-type.enum';
-import { Category, EMPTY_CATEGORY } from '../../models/category.model';
 import { DefaultCategory } from '../../models/default-category.model';
-import { Payment } from '../../models/payment.model';
-import { CategoryService } from '../../service/category.service';
-import { NotificationService } from '../../service/notification.service';
-import { PaymentService } from '../../service/payment.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
     selector: 'app-category-list',
@@ -22,10 +21,10 @@ import { PaymentService } from '../../service/payment.service';
 })
 export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
 
-    public categoryDataSource: MatTableDataSource<Category>;
+    public categoryDataSource: MatTableDataSource<CategoryModel>;
     public tableColumns: string[];
     public defaultCategories: DefaultCategory[];
-    private categories: Category[];
+    private categories: CategoryModel[];
     private categoryIdsPerPayment: string[];
 
     @ViewChild(MatPaginator) public paginator: MatPaginator;
@@ -40,7 +39,7 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
         private dialog: MatDialog,
     ) {
         this.tableColumns = ['name', 'action'];
-        this.categoryDataSource = new MatTableDataSource<Category>([]);
+        this.categoryDataSource = new MatTableDataSource<CategoryModel>([]);
         this.paginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
         this.sort = new MatSort;
         this.categories = [];
@@ -67,20 +66,20 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public getCategories(): void {
         this.categoryService.getCategories().pipe(takeUntil(this.ngDestroy))
-            .subscribe((categories: Category[]) => {
+            .subscribe((categories: CategoryModel[]) => {
                 this.categories = categories;
                 this.categoryDataSource.data = this.sortCategoriesAsc(categories);
          })
     }
 
-    private sortCategoriesAsc(categories: Category[]): Category[] {
-        return categories.sort((a: Category, b: Category)=> a.name > b.name ? 1:-1 );
+    private sortCategoriesAsc(categories: CategoryModel[]): CategoryModel[] {
+        return categories.sort((a: CategoryModel, b: CategoryModel)=> a.name > b.name ? 1:-1 );
     }
 
     private getCategoriesPerPayment(): void {
         this.paymentService.getPayments().pipe(takeUntil(this.ngDestroy))
-            .subscribe((payments: Payment[]) => {
-                payments.forEach((payment: Payment) => {
+            .subscribe((payments: PaymentModel[]) => {
+                payments.forEach((payment: PaymentModel) => {
                     this.categoryIdsPerPayment.push(payment.categoryId);
                 });
             });
@@ -110,7 +109,7 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public filterDefaultCategory(event: any): void {
         if (event.value != "noFilter") {
-            const filteredDataByDefaultCategory = this.categories.filter((category: Category) => category.defaultCategory === event.value);
+            const filteredDataByDefaultCategory = this.categories.filter((category: CategoryModel) => category.defaultCategory === event.value);
             this.categoryDataSource.data = filteredDataByDefaultCategory;
         } else {
             this.categoryDataSource.data = this.categories;
@@ -123,14 +122,14 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
-    public openEditCategoryDialog(category: Category): void {
+    public openEditCategoryDialog(category: CategoryModel): void {
         const editDialogRef = this.dialog.open(CategoryModalDialogComponent, {
             data: category
         });
 
     }
 
-    public deleteCategory(category: Category): void {
+    public deleteCategory(category: CategoryModel): void {
         if(!this.categoryIsUsedForPayments(category.id, this.categoryIdsPerPayment)) {
             this.categoryService.deleteCategory(category.id);
             this.notificationService.showNotification({

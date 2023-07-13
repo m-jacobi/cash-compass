@@ -1,9 +1,9 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject } from 'rxjs/internal/Subject';
-import { Category } from '../../models/category.model';
-import { CategoryService } from '../../service/category.service';
+import { CategoryService } from '../../core/data-access/services/category/category.service';
+import { CategoryModel } from '../../core/models/category.model';
 
 @Component({
   selector: 'app-category-modal-dialog',
@@ -17,8 +17,8 @@ export class CategoryModalDialogComponent implements OnInit, OnDestroy {
 
     constructor(
         private categoryService: CategoryService,
-        public modalRef: MatDialogRef<CategoryModalDialogComponent, Category>,
-        @Inject(MAT_DIALOG_DATA) public data: Category
+        public modalRef: MatDialogRef<CategoryModalDialogComponent, CategoryModel>,
+        @Inject(MAT_DIALOG_DATA) public data: CategoryModel
     ) {
         this.categoryForm = new FormGroup({
             name: new FormControl(this.data.name, Validators.required)
@@ -33,7 +33,7 @@ export class CategoryModalDialogComponent implements OnInit, OnDestroy {
     }
 
     public saveCategory(): void {
-        const category: Category = {
+        const category: CategoryModel = {
             id: this.data.id,
             name: this.formControl['name'].value,
             defaultCategory: this.data.defaultCategory,

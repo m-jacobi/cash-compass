@@ -1,7 +1,7 @@
 import { format } from "date-fns";
-import { Category } from 'src/app/models/category.model';
+import { CategoryModel } from 'src/app/core/models/category.model';
 
-export interface Payment {
+export interface PaymentModel {
   id: string;
   description: string;
   amount: number;
@@ -9,10 +9,10 @@ export interface Payment {
   categoryId: string;
   payee: string;
   incomeOrExpense: boolean;
-  category?: Category;
+  category?: CategoryModel;
 };
 
-export const EMPTY_PAYMENT: Payment = {
+export const EMPTY_PAYMENT: PaymentModel = {
     id: '',
     description: '',
     amount: 0,

@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { BrowserModule } from '@angular/platform-browser';
-import { PaymentListComponent } from './components/payment-list/payment-list.component';
 
 import { OverlayModule } from '@angular/cdk/overlay';
 import { DatePipe } from '@angular/common';
@@ -33,6 +32,7 @@ import { NotificationComponent } from './components/notification/notification.co
 import { CategoryModalDialogComponent } from './dialog/category-modal-dialog/category-modal-dialog.component';
 import { PaymentModalDialogComponent } from './dialog/payment-modal-dialog/payment-modal-dialog.component';
 import { getMatPaginatorIntl } from './utils/paginator-intl';
+import { PaymentListComponent } from './components/payment-list/payment-list.component';
 
 
 @NgModule({

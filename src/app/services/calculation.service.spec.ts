@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Payment } from '../models/payment.model';
+import { PaymentModel } from '../core/models/payment.model';
 
 import { CalculationService } from './calculation.service';
 
@@ -16,7 +16,7 @@ describe('CalculationService', () => {
     });
 
     describe('getTotalIncomeCost', () => {
-        let payments: Payment[] = [];
+        let payments: PaymentModel[] = [];
         // it('should return the total income cost of payments', () => {
         //   const result = service.getTotalIncomeCost(payments);
         //   expect(result).toBe(175);

@@ -1,13 +1,13 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { formatISO, parseISO } from 'date-fns';
 import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
-import { Category } from '../../models/category.model';
+import { CategoryService } from 'src/app/core/data-access/services/category/category.service';
+import { PaymentService } from 'src/app/core/data-access/services/payment/payment.service';
+import { CategoryModel } from '../../core/models/category.model';
+import { PaymentModel } from '../../core/models/payment.model';
 import { PaymentIncomeOrExpense } from '../../models/payment-income-or-expense.model';
-import { Payment } from '../../models/payment.model';
-import { CategoryService } from '../../service/category.service';
-import { PaymentService } from '../../service/payment.service';
 
 @Component({
   selector: 'app-payment-modal-dialog',
@@ -17,19 +17,19 @@ import { PaymentService } from '../../service/payment.service';
 export class PaymentModalDialogComponent implements OnInit, OnDestroy {
 
     public form: FormGroup;
-    public filteredCategorie$: Observable<Category[]>
-    public categories: Category[] = [];
+    public filteredCategorie$: Observable<CategoryModel[]>
+    public categories: CategoryModel[] = [];
     public incomeOrExpenses: PaymentIncomeOrExpense[];
-    private filteredCategoriesSubject: BehaviorSubject<Category[]>;
+    private filteredCategoriesSubject: BehaviorSubject<CategoryModel[]>;
     private readonly ngDestroy = new Subject<void>();
 
     constructor(
         private paymentService: PaymentService,
         private categoryService: CategoryService,
-        public modalRef: MatDialogRef<PaymentModalDialogComponent, Payment>,
-        @Inject(MAT_DIALOG_DATA) public data: Payment
+        public modalRef: MatDialogRef<PaymentModalDialogComponent, PaymentModel>,
+        @Inject(MAT_DIALOG_DATA) public data: PaymentModel
     ) {
-        this.filteredCategoriesSubject = new BehaviorSubject<Category[]>([]);
+        this.filteredCategoriesSubject = new BehaviorSubject<CategoryModel[]>([]);
         this.filteredCategorie$ = this.filteredCategoriesSubject.asObservable();
 
         this.incomeOrExpenses = [
@@ -43,7 +43,7 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
         ]
 
         this.categoryService.getCategories().pipe(takeUntil(this.ngDestroy))
-            .subscribe((categories: Category[]) => {
+            .subscribe((categories: CategoryModel[]) => {
                 this.categories = categories;
                 this.filteredCategoriesSubject.next(this.categories);
         });
@@ -71,7 +71,7 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
     }
 
     public savePayment(): void {
-        const payment: Payment = {
+        const payment: PaymentModel = {
         id: this.data.id,
         description: this.formControl['description'].value,
         amount: this.formControl['amount'].value,

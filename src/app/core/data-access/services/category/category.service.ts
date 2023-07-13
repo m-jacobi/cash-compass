@@ -1,33 +1,35 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
 import { from, Observable, ReplaySubject } from 'rxjs';
-import { NOTIFICATION_TYPE } from '../enum/notification-type.enum';
-import { Category } from '../models/category.model';
-import { NotificationService } from './notification.service';
+import { CategoryModel } from 'src/app/core/models/category.model';
+import { NOTIFICATION_TYPE } from 'src/app/enum/notification-type.enum';
+import { NotificationService } from 'src/app/services/notification.service';
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
 
-    private categoriesSubject: ReplaySubject<Category[]>
+    private categoriesSubject: ReplaySubject<CategoryModel[]>
 
     constructor(private notificationService: NotificationService) {
-        this.categoriesSubject = new ReplaySubject<Category[]>(1);
+        this.categoriesSubject = new ReplaySubject<CategoryModel[]>(1);
         this.fetchCategories();
     }
 
     private fetchCategories(): void {
-        from(invoke<Category[]>('get_categories')).subscribe((categories: Category[]) => {
+        from(invoke<CategoryModel[]>('get_categories')).subscribe((categories: CategoryModel[]) => {
             this.categoriesSubject.next(JSON.parse(categories.toString()));
         })
     }
 
-    public getCategories(): Observable<Category[]> {
+    public getCategories(): Observable<CategoryModel[]> {
         return this.categoriesSubject.asObservable();
     }
 
-    public createCategory(category: Category): void {
+    public createCategory(category: CategoryModel): void {
         invoke('create_category', {
             name: category.name,
             defaultCategory: category.defaultCategory,
@@ -49,7 +51,7 @@ export class CategoryService {
         this.fetchCategories();
     }
 
-    public updateCategory(category: Category): void {
+    public updateCategory(category: CategoryModel): void {
         invoke('update_category', {
             id: category.id,
             name: category.name,

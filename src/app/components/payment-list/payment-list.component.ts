@@ -6,14 +6,14 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { compareAsc, format } from 'date-fns';
 import { Subject, combineLatest, map, takeUntil } from 'rxjs';
+import { CategoryService } from '../../core/data-access/services/category/category.service';
+import { PaymentService } from '../../core/data-access/services/payment/payment.service';
+import { CategoryModel } from '../../core/models/category.model';
+import { EMPTY_PAYMENT, PaymentModel } from '../../core/models/payment.model';
 import { PaymentModalDialogComponent } from '../../dialog/payment-modal-dialog/payment-modal-dialog.component';
-import { Category } from '../../models/category.model';
 import { DateRange } from '../../models/date-range.model';
 import { PaymentIncomeOrExpense } from '../../models/payment-income-or-expense.model';
-import { EMPTY_PAYMENT, Payment } from '../../models/payment.model';
-import { CalculationService } from '../../service/calculation.service';
-import { PaymentService } from '../../service/payment.service';
-import { CategoryService } from './../../service/category.service';
+import { CalculationService } from '../../services/calculation.service';
 
 @Component({
   selector: 'app-payment-list',
@@ -23,11 +23,11 @@ import { CategoryService } from './../../service/category.service';
 
 export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
 
-    public paymentDataSource: MatTableDataSource<Payment>;
+    public paymentDataSource: MatTableDataSource<PaymentModel>;
     public tableColumns: string[];
     public filterDateRangeForm: FormGroup;
     public incomeOrExpenses: PaymentIncomeOrExpense[];
-    private payments: Payment[];
+    private payments: PaymentModel[];
     private readonly ngDestroy = new Subject<void>();
 
     @ViewChild(MatPaginator) public paginator: MatPaginator;
@@ -41,7 +41,7 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ) {
         this.tableColumns = ['category', 'description', 'amount', 'payee', 'paymentDate', 'action'];
-        this.paymentDataSource = new MatTableDataSource<Payment>([]);
+        this.paymentDataSource = new MatTableDataSource<PaymentModel>([]);
         this.paginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
         this.sort = new MatSort;
         this.payments = [];
@@ -76,10 +76,10 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
         combineLatest([payments$, categories$])
             .pipe(map(([payment, category]) => {
                 return payment.map(paymentData => {
-                    const categoryData = category.find((c: Category) => c.id === paymentData.categoryId);
+                    const categoryData = category.find((c: CategoryModel) => c.id === paymentData.categoryId);
                     return {...paymentData, category: categoryData};
             });
-        })).pipe(takeUntil(this.ngDestroy)).subscribe((payment: Payment[]) =>  {
+        })).pipe(takeUntil(this.ngDestroy)).subscribe((payment: PaymentModel[]) =>  {
             this.payments = payment;
             this.paymentDataSource.data = payment;
         });
@@ -112,13 +112,13 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
     public filterDateRange(value: DateRange): void {
         const fromDate = format(new Date(value.fromDate), "yyyy-MM-dd");
         const toDate = format(new Date(value.toDate), "yyyy-MM-dd");
-        this.paymentDataSource.data = this.payments.filter((payment: Payment) => payment.paymentDate >= fromDate && payment.paymentDate <= toDate )
+        this.paymentDataSource.data = this.payments.filter((payment: PaymentModel) => payment.paymentDate >= fromDate && payment.paymentDate <= toDate )
             .sort((a, b) => compareAsc(new Date(a.paymentDate), new Date(b.paymentDate)));
     }
 
     public filterByIncomeOrExpense(event: any): void {
         if (event.value != "noFilter") {
-            const filteredDataByIncomeOrExpense = this.payments.filter((payment: Payment) => payment.incomeOrExpense === event.value);
+            const filteredDataByIncomeOrExpense = this.payments.filter((payment: PaymentModel) => payment.incomeOrExpense === event.value);
             this.paymentDataSource.data = filteredDataByIncomeOrExpense;
         } else {
             this.paymentDataSource.data = this.payments;
@@ -131,7 +131,7 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
-    public openEditPaymentDialog(payment: Payment): void {
+    public openEditPaymentDialog(payment: PaymentModel): void {
         this.dialog.open(PaymentModalDialogComponent, {
             data: payment
         });
