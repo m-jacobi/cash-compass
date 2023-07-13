@@ -5,7 +5,7 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { compareAsc, format } from 'date-fns';
-import { combineLatest, map, Subject, takeUntil } from 'rxjs';
+import { Subject, combineLatest, map, takeUntil } from 'rxjs';
 import { PaymentModalDialogComponent } from '../../dialog/payment-modal-dialog/payment-modal-dialog.component';
 import { Category } from '../../models/category.model';
 import { DateRange } from '../../models/date-range.model';
@@ -88,6 +88,9 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
     public ngAfterViewInit(): void {
         this.paymentDataSource.sort = this.sort;
         this.paymentDataSource.paginator = this.paginator;
+        if (this.paymentDataSource.paginator) {
+            this.paymentDataSource.paginator.firstPage();
+        }
     }
 
     public ngOnDestroy(): void {
@@ -97,6 +100,7 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public filterPayments(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
+        console.log('this.paymentDataSource', this.paymentDataSource);
         this.paymentDataSource.filter = filterValue.trim().toLowerCase();
 
         if (this.paymentDataSource.paginator) {

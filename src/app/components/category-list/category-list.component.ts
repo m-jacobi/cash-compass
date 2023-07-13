@@ -27,7 +27,6 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
     public defaultCategories: DefaultCategory[];
     private categories: Category[];
     private categoryIdsPerPayment: string[];
-    private payments: Payment[];
 
     @ViewChild(MatPaginator) public paginator: MatPaginator;
     @ViewChild(MatSort) public sort: MatSort;
@@ -46,7 +45,6 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.sort = new MatSort;
         this.categories = [];
         this.categoryIdsPerPayment = [];
-        this.payments = [];
         this.defaultCategories = [
             {
                 name: "---",
@@ -64,7 +62,7 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnInit(): void {
         this.getCategories();
-        this.getCategoriesperPayment();
+        this.getCategoriesPerPayment();
     }
 
     public getCategories(): void {
@@ -79,7 +77,7 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
         return categories.sort((a: Category, b: Category)=> a.name > b.name ? 1:-1 );
     }
 
-    private getCategoriesperPayment(): void {
+    private getCategoriesPerPayment(): void {
         this.paymentService.getPayments().pipe(takeUntil(this.ngDestroy))
             .subscribe((payments: Payment[]) => {
                 payments.forEach((payment: Payment) => {
@@ -143,7 +141,7 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.notificationService.showNotification({
                 notificationType: NOTIFICATION_TYPE.ERROR,
-                message: 'Die Kategorie konnt nicht entfernt werden, da sie noch mit mindestens einer bestehenden Buchung verknüpft ist',
+                message: 'Die Kategorie konnt nicht entfernt werden, da sie noch mit mindestens einer bestehenden Buchung verknüpft ist.',
                 buttonText: 'OK'
             });
         }
