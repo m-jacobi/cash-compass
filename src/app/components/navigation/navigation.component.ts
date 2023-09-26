@@ -1,6 +1,6 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Observable, map } from 'rxjs';
 import { EMPTY_CATEGORY } from '../../core/models/category.model';
 import { EMPTY_PAYMENT } from '../../core/models/payment.model';
