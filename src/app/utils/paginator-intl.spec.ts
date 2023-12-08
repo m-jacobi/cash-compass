@@ -1,4 +1,5 @@
-import { MatLegacyPaginatorIntl as MatPaginatorIntl } from "@angular/material/legacy-paginator";
+
+import { MatPaginatorIntl } from "@angular/material/paginator";
 import { getMatPaginatorIntl } from "./paginator-intl";
 
 describe('getMatPaginatorIntl', () => {
