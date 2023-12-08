@@ -1,27 +1,27 @@
-table {
-    width: 100%;
+.category-list__search-filter {
+    width: 500px;
 }
 
-td, th {
-    width: 25%;
+.category-list__table {
+    position: relative;
+    min-height: 200px;
+    max-height: 700px;
+    overflow: auto;
 }
 
-.mat-form-field {
-    font-size: 14px;
-    width: 100%;
+.category-list__table-row:hover {
+    background: whitesmoke;
 }
 
-.filter{
-    display: flex;
+.mat-column-action {
+    text-align: left;
 }
 
-.filter-table {
-    flex-basis: 300px;
-    margin-right: 100px;
+.no-data {
+    text-align: center;
+    font-size: large;
 }
 
-.filter-default-category {
-    flex-basis: 150px;
-    margin-right: 15px;
-}
+
+
 

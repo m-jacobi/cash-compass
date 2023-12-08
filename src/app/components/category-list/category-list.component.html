@@ -1,65 +1,53 @@
-<div class="filter">
-    <div class="filter-table">
-        <mat-form-field appearance="fill"
-            matTooltip="Kategorien filtern">
-            <mat-label>Suche</mat-label>
-            <input matInput (keyup)="filterCategories($event)" placeholder="Bitte einen Suchbegriff eingeben" #input>
-        </mat-form-field>
-    </div>
-</div>
 
-<div class="mat-elevation-z8">
+<mat-form-field class="category-list__search-filter" appearance="fill" matTooltip="Kategorien filtern">
+    <mat-label>Suche</mat-label>
+    <input matInput (keyup)="filterCategories($event)" placeholder="Bitte einen Suchbegriff eingeben">
+</mat-form-field>
+
+<div class="category-list__table">
     <table mat-table [dataSource]="categoryDataSource" matSort>
-        <!-- Name -->
         <ng-container matColumnDef="name">
             <th mat-header-cell mat-sort-header="name" *matHeaderCellDef> Name </th>
             <td mat-cell *matCellDef="let row"> {{row.name}} </td>
         </ng-container>
 
-        <!-- DefaultCategory -->
-        <ng-container matColumnDef="defaultCategory">
-            <th mat-header-cell mat-sort-header="defaultCategory" *matHeaderCellDef> Standardkategorie </th>
-            <td mat-cell *matCellDef="let row"> {{row.defaultCategory === true ? 'Ja' : 'Nein'}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="action" >
-            <mat-header-cell *matHeaderCellDef>
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>
                 <button
                     mat-icon-button color="primary"
                     matTooltip="Neue Kategorie"
                     (click)="openCreateCategoryDialog()">
-                    <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+                    <mat-icon>add</mat-icon>
                 </button>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let row; let i=index">
+            </th>
+            <td mat-cell *matCellDef="let row; let i=index">
                 <button
-                    mat-button color="accent"
+                    mat-icon-button
+                    color="accent"
                     matTooltip="Kategorie bearbeiten"
                     (click)="openEditCategoryDialog(row)">
-                    <mat-icon aria-label="Edit">edit</mat-icon>
-            </button>
-            <button
-                mat-button color="accent"
-                matTooltip="Kategorie entfernen"
-                (click)="deleteCategory(row)">
-                    <mat-icon aria-label="Delete">delete</mat-icon>
-            </button>
-            </mat-cell>
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                    mat-icon-button
+                    color="warn"
+                    matTooltip="Kategorie entfernen"
+                    (click)="deleteCategory(row)">
+                        <mat-icon>delete</mat-icon>
+                </button>
+            </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: tableColumns;"></tr>
+        <tr mat-header-row *matHeaderRowDef="categoryListTableColumns sticky: true"></tr>
+        <tr class="category-list__table-row" mat-row *matRowDef="let row; columns: categoryListTableColumns;"></tr>
 
-        <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="4">Keine Kategorien gefunden.</td>
+        <tr class="no-data" *matNoDataRow>
+            <td>Keine Kategorien gefunden.</td>
         </tr>
     </table>
-
-    <mat-paginator
+</div>
+<mat-paginator
         [pageIndex]="0"
         [pageSize]="10"
-        [pageSizeOptions]="[5, 10, 25, 100, 250, 500, 1000]">
-    </mat-paginator>
-</div>
-
-
+        [pageSizeOptions]="[5, 10, 25, 100]">
+ </mat-paginator>
