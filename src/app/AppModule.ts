@@ -3,22 +3,20 @@ import { DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
 import { MatListModule } from '@angular/material/list';
-import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
@@ -32,6 +30,7 @@ import { PaymentListComponent } from './components/payment-list/payment-list.com
 import { CategoryModalDialogComponent } from './dialog/category-modal-dialog/category-modal-dialog.component';
 import { PaymentModalDialogComponent } from './dialog/payment-modal-dialog/payment-modal-dialog.component';
 import { getMatPaginatorIntl } from './utils/paginator-intl';
+
 
 
 @NgModule({
@@ -91,8 +90,8 @@ import { getMatPaginatorIntl } from './utils/paginator-intl';
             provide: MatPaginatorIntl,
             useValue: getMatPaginatorIntl()
         },
-
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
