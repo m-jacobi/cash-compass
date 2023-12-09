@@ -25,7 +25,7 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public paymentDataSource: MatTableDataSource<PaymentModel>;
     public tableColumns: string[];
-    public filterDateRangeForm: FormGroup;
+    public filterDateForm: FormGroup;
     public incomeOrExpenses: PaymentIncomeOrExpense[];
     private payments: PaymentModel[];
     private readonly ngDestroy = new Subject<void>();
@@ -45,7 +45,7 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.paginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
         this.sort = new MatSort;
         this.payments = [];
-        this.filterDateRangeForm = new FormGroup({
+        this.filterDateForm = new FormGroup({
             fromDate: new FormControl(),
             toDate: new FormControl(),
         });
@@ -69,21 +69,6 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.getPayments();
     }
 
-    private getPayments(): void {
-        const payments$ = this.paymentService.getPayments();
-        const categories$ = this.categoryService.getCategories();
-
-        combineLatest([payments$, categories$])
-            .pipe(map(([payment, category]) => {
-                return payment.map(paymentData => {
-                    const categoryData = category.find((c: CategoryModel) => c.id === paymentData.categoryId);
-                    return {...paymentData, category: categoryData};
-            });
-        })).pipe(takeUntil(this.ngDestroy)).subscribe((payment: PaymentModel[]) =>  {
-            this.payments = payment;
-            this.paymentDataSource.data = payment;
-        });
-    }
 
     public ngAfterViewInit(): void {
         this.paymentDataSource.sort = this.sort;
@@ -100,7 +85,6 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public filterPayments(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
-        console.log('this.paymentDataSource', this.paymentDataSource);
         this.paymentDataSource.filter = filterValue.trim().toLowerCase();
 
         if (this.paymentDataSource.paginator) {
@@ -109,7 +93,7 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     // TODO: Reset Date Range
-    public filterDateRange(value: DateRange): void {
+    public filterDate(value: DateRange): void {
         const fromDate = format(new Date(value.fromDate), "yyyy-MM-dd");
         const toDate = format(new Date(value.toDate), "yyyy-MM-dd");
         this.paymentDataSource.data = this.payments.filter((payment: PaymentModel) => payment.paymentDate >= fromDate && payment.paymentDate <= toDate )
@@ -139,5 +123,21 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public deletePayment(paymentId: string): void {
         this.paymentService.deletePayment(paymentId);
+    }
+
+    private getPayments(): void {
+        const payments$ = this.paymentService.getPayments();
+        const categories$ = this.categoryService.getCategories();
+
+        combineLatest([payments$, categories$])
+            .pipe(map(([payment, category]) => {
+                return payment.map(paymentData => {
+                    const categoryData = category.find((c: CategoryModel) => c.id === paymentData.categoryId);
+                    return {...paymentData, category: categoryData};
+            });
+        })).pipe(takeUntil(this.ngDestroy)).subscribe((payment: PaymentModel[]) =>  {
+            this.payments = payment;
+            this.paymentDataSource.data = payment;
+        });
     }
 }

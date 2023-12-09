@@ -1,56 +1,42 @@
-table {
-  width: 100%;
+.payment-list__base-filter {
+    justify-content: flex-start;
+
 }
 
-td, th {
-  width: 25%;
+.payment-list__search-filter {
+    min-width: 400px;
+    margin-right: 15px;
 }
 
-.mat-footer-cell {
-    font-weight: bold;
+.payment-list__income-expense-filter {
+    min-width: 300px;
+    margin-right: 10px;
 }
 
-.mat-footer-cell.income {
-    font-weight: normal;
-    color: #00cc00;
+.payment-list__date-filter {
+    text-align: right;
 }
 
-
-.mat-footer-cell.expense {
-    font-weight: normal;
-    color: #cc0000;
-}
-
-.mat-form-field {
-    font-size: 14px;
-    width: 100%;
-}
-
-.primary{
-    height: 50px;
-    justify-content:right;
-  }
-
-.filter{
-   //display: flex;
-   //justify-content: start;
-   display:flex;
-   //justify-content: space-around;
-}
-
-.filter-table {
-    flex-basis: 300px;
-    justify-content: flex-end;
-    margin-right: 40px;
-    width: 200px;
-}
-
-.filter-income-expense {
-    margin-right: 50px;
-    width: 150px;
-}
-
-.filter-date {
+.payment-list__form__date-filter {
     width: 150px;
     margin-right: 15px;
 }
+
+.payment-list__table {
+    position: relative;
+    min-height: 200px;
+    max-height: 700px;
+    overflow: auto;
+}
+
+.category-list__table-row:hover {
+    background: whitesmoke;
+}
+
+.no-data {
+    text-align: center;
+    font-size: large;
+}
+
+
+
