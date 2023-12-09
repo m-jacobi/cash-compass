@@ -1,23 +1,37 @@
-.payment-list__base-filter {
-    justify-content: flex-start;
-
+.payment-list__filter {
+    display: flex;
+    flex-direction: column;
 }
 
-.payment-list__search-filter {
+/* große Viewports */
+@media all and (min-width: 30em) {
+    .payment-list__filter {
+        display: flex;
+        flex-direction: row;
+    }
+}
+
+.payment-list__filter-base {
+    flex: auto;
+    text-align: left;
+}
+
+.payment-list__filter-base__search {
     min-width: 400px;
     margin-right: 15px;
 }
 
-.payment-list__income-expense-filter {
+.payment-list__filter-base__income-expense {
     min-width: 300px;
-    margin-right: 10px;
+    margin-right: 60px;
 }
 
-.payment-list__date-filter {
+.payment-list__filter-date {
+    flex: auto;
     text-align: right;
 }
 
-.payment-list__form__date-filter {
+.payment-list__filter-date__form {
     width: 150px;
     margin-right: 15px;
 }

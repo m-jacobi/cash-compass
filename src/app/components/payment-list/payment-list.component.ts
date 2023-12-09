@@ -137,6 +137,7 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         })).pipe(takeUntil(this.ngDestroy)).subscribe((payment: PaymentModel[]) =>  {
             this.payments = payment;
+            console.log('payment', payment);
             this.paymentDataSource.data = payment;
         });
     }

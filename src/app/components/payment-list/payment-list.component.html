@@ -1,42 +1,45 @@
-<ng-container class="payment-list__base-filter">
-    <mat-form-field class="payment-list__search-filter" appearance="outline"
-        matTooltip="Buchungen filtern">
-        <mat-label>Suche</mat-label>
-        <input matInput (keyup)="filterPayments($event)" placeholder="Bitte einen Suchbegriff eingeben" #input>
-    </mat-form-field>
-    <mat-form-field class="payment-list__income-expense-filter" appearance="outline" >
-        <mat-select (selectionChange)="filterByIncomeOrExpense($event)"
-            placeholder="Einnahme / Ausgabe"
-            matTooltip="Nach Einnahmen oder Ausgaben filtern">
-            <mat-option *ngFor="let incomeOrExpense of incomeOrExpenses" [value]="incomeOrExpense.state">
-                {{ incomeOrExpense.name }}
-                </mat-option>
-        </mat-select>
-    </mat-form-field>
-</ng-container>
-<ng-container class="payment-list__date-filter">
-    <form [formGroup]="filterDateForm">
-        <mat-form-field class="payment-list__form__date-filter" appearance="outline">
-            <input matInput
-                [matDatepicker]="fromDate"
-                placeholder="Von"
-                matTooltip="Startdatum"
-                formControlName="fromDate">
-            <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
-            <mat-datepicker #fromDate></mat-datepicker>
+<div class="payment-list__filter">
+    <div class="payment-list__filter-base">
+        <mat-form-field class="payment-list__filter-base__search" appearance="outline"
+            matTooltip="Buchungen filtern">
+            <mat-label>Suche</mat-label>
+            <input matInput (keyup)="filterPayments($event)" placeholder="Bitte einen Suchbegriff eingeben" #input>
         </mat-form-field>
-        <mat-form-field class="payment-list__form__date-filter" appearance="outline">
-            <input matInput
-                [matDatepicker]="toDate"
-                placeholder="Bis"
-                matTooltip="Enddatum"
-                formControlName="toDate">
-            <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
-            <mat-datepicker #toDate></mat-datepicker>
+        <mat-form-field class="payment-list__filter-base__income-expense" appearance="outline" >
+            <mat-select (selectionChange)="filterByIncomeOrExpense($event)"
+                placeholder="Einnahme / Ausgabe"
+                matTooltip="Nach Einnahmen oder Ausgaben filtern">
+                <mat-option *ngFor="let incomeOrExpense of incomeOrExpenses" [value]="incomeOrExpense.state">
+                    {{ incomeOrExpense.name }}
+                    </mat-option>
+            </mat-select>
         </mat-form-field>
-        <button mat-flat-button color="primary" class="primary" (click)="filterDate(filterDateForm.value)">Datum suchen</button>
-    </form>
-</ng-container>
+    </div>
+    <div class="payment-list__filter_date">
+        <form [formGroup]="filterDateForm">
+            <mat-form-field class="payment-list__filter-date__form" appearance="outline">
+                <input matInput
+                    [matDatepicker]="fromDate"
+                    placeholder="Von"
+                    matTooltip="Startdatum"
+                    formControlName="fromDate">
+                <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
+                <mat-datepicker #fromDate></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field class="payment-list__filter-date__form" appearance="outline">
+                <input matInput
+                    [matDatepicker]="toDate"
+                    placeholder="Bis"
+                    matTooltip="Enddatum"
+                    formControlName="toDate">
+                <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
+                <mat-datepicker #toDate></mat-datepicker>
+            </mat-form-field>
+            <button mat-flat-button color="primary" class="primary" (click)="filterDate(filterDateForm.value)">Datum suchen</button>
+        </form>
+    </div>
+</div>
+
 
 <div class="payment-list__table">
     <table mat-table [dataSource]="paymentDataSource" matSort>
