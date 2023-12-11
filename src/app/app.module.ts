@@ -25,12 +25,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CategoryListComponent } from './components/category-list/category-list.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { NotificationComponent } from './components/notification/notification.component';
-import { PaymentListComponent } from './components/payment-list/payment-list.component';
 import { CategoryModalDialogComponent } from './dialog/category-modal-dialog/category-modal-dialog.component';
 import { PaymentModalDialogComponent } from './dialog/payment-modal-dialog/payment-modal-dialog.component';
+import { CategoryListComponent } from './feature-modules/category/components/category-list/category-list.component';
+import { PaymentListComponent } from './feature-modules/payment/components/payment-list/payment-list.component';
 import { getMatPaginatorIntl } from './utils/paginator-intl';
 
 

@@ -7,11 +7,12 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { CategoryService } from 'src/app/core/data-access/services/category/category.service';
 import { PaymentService } from 'src/app/core/data-access/services/payment/payment.service';
-import { CategoryModel, EMPTY_CATEGORY } from '../../core/models/category.model';
-import { PaymentModel } from '../../core/models/payment.model';
-import { CategoryModalDialogComponent } from '../../dialog/category-modal-dialog/category-modal-dialog.component';
-import { NOTIFICATION_TYPE } from '../../enum/notification-type.enum';
-import { NotificationService } from '../../services/notification.service';
+import { CategoryModel, EMPTY_CATEGORY } from '../../../../core/models/category.model';
+import { PaymentModel } from '../../../../core/models/payment.model';
+import { CategoryModalDialogComponent } from '../../../../dialog/category-modal-dialog/category-modal-dialog.component';
+import { NOTIFICATION_TYPE } from '../../../../enum/notification-type.enum';
+import { NotificationService } from '../../../../services/notification.service';
+
 
 @Component({
     selector: 'app-category-list',

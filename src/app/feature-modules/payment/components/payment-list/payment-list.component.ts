@@ -6,14 +6,14 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { compareAsc, format } from 'date-fns';
 import { Subject, combineLatest, map, takeUntil } from 'rxjs';
-import { CategoryService } from '../../core/data-access/services/category/category.service';
-import { PaymentService } from '../../core/data-access/services/payment/payment.service';
-import { CategoryModel } from '../../core/models/category.model';
-import { EMPTY_PAYMENT, PaymentModel } from '../../core/models/payment.model';
-import { PaymentModalDialogComponent } from '../../dialog/payment-modal-dialog/payment-modal-dialog.component';
-import { DateRange } from '../../models/date-range.model';
-import { PaymentIncomeOrExpense } from '../../models/payment-income-or-expense.model';
-import { CalculationService } from '../../services/calculation.service';
+import { CategoryService } from '../../../../core/data-access/services/category/category.service';
+import { PaymentService } from '../../../../core/data-access/services/payment/payment.service';
+import { CategoryModel } from '../../../../core/models/category.model';
+import { EMPTY_PAYMENT, PaymentModel } from '../../../../core/models/payment.model';
+import { PaymentModalDialogComponent } from '../../../../dialog/payment-modal-dialog/payment-modal-dialog.component';
+import { DateRange } from '../../../../models/date-range.model';
+import { PaymentIncomeOrExpense } from '../../../../models/payment-income-or-expense.model';
+import { CalculationService } from '../../../../services/calculation.service';
 
 @Component({
   selector: 'app-payment-list',
@@ -33,6 +33,7 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(MatPaginator) public paginator: MatPaginator;
     @ViewChild(MatSort) public sort: MatSort;
 
+    // TODO: calculationService to private!!
     constructor(
         private paymentService: PaymentService,
         private categoryService: CategoryService,
