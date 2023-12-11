@@ -7,6 +7,7 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { CategoryService } from 'src/app/core/data-access/services/category/category.service';
 import { PaymentService } from 'src/app/core/data-access/services/payment/payment.service';
+import { CategoryFacade } from 'src/app/core/facades/category.facade';
 import { CategoryModel, EMPTY_CATEGORY } from '../../../../core/models/category.model';
 import { PaymentModel } from '../../../../core/models/payment.model';
 import { CategoryModalDialogComponent } from '../../../../dialog/category-modal-dialog/category-modal-dialog.component';
@@ -31,6 +32,7 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     constructor(
         private categoryService: CategoryService,
+        private categoryFacade: CategoryFacade,
         private paymentService: PaymentService,
         private notificationService: NotificationService,
         private dialog: MatDialog,
@@ -45,6 +47,8 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
     public ngOnInit(): void {
         this.getCategories();
         this.getCategoriesPerPayment();
+
+        console.log('category facade', this.categoryFacade.loadCategories());
     }
 
     public ngAfterViewInit(): void {
