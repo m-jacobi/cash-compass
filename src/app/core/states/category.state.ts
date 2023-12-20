@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, ReplaySubject } from "rxjs";
+import { TDictionary } from "../../utils/dictionary.util";
 import { CategoryModel } from '../models/category.model';
-import { TDictionary } from "../utils/dictionary.util";
 
 @Injectable({ providedIn: 'root' })
 export class CategoryState {

@@ -1,18 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject, combineLatest, map } from 'rxjs';
-import { CategoryFacade } from 'src/app/core/facades/category.facade';
-import { CategoryModel } from 'src/app/core/models/category.model';
-import { TDictionary } from 'src/app/core/utils/dictionary.util';
+import { CategoryFacade } from '../../../../../core/facades/category.facade';
 import { PaymentFacade } from '../../../../../core/facades/payment.facade';
+import { CategoryModel } from '../../../../../core/models/category.model';
 import { PaymentModel } from '../../../../../core/models/payment.model';
+import { TDictionary, getEntityDict } from '../../../../../utils/dictionary.util';
 import { PaymentListVM } from '../models/payment.vm';
-
-const getEntityDict = <T>(entities: any[], key: string): TDictionary<T> => {
-    const dict: TDictionary<any> = {};
-
-    entities.forEach((entity: any) => dict[entity[key] as string] = entity);
-    return dict;
-};
 
 @Injectable({providedIn: 'root'})
 export class PaymentListPresenter {
