@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { compareAsc, format } from 'date-fns';
 import { Subject, takeUntil } from 'rxjs';
 import { CategoryFacade } from 'src/app/core/facades/category.facade';
+import { CalculationService } from 'src/app/services/calculation.service';
 import { PaymentFacade } from '../../../../core/facades/payment.facade';
 import { EMPTY_PAYMENT, PaymentModel } from '../../../../core/models/payment.model';
 import { PaymentModalDialogComponent } from '../../../../dialog/payment-modal-dialog/payment-modal-dialog.component';
@@ -29,16 +30,18 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
     public paymentDataSource: MatTableDataSource<PaymentListVM>;
     public tableColumns: string[];
     public filterDateForm: FormGroup;
+    public totalIncomeCost: number = 0;
+    public totalExpenseCost: number = 0;
     public incomeOrExpenses: PaymentIncomeOrExpense[];
     private payments: PaymentListVM[] = [];
     private readonly ngDestroy = new Subject<void>();
 
-    // TODO: calculationService to private!!
     constructor(
         private paymentFacade: PaymentFacade,
         private paymentListPresenter: PaymentListPresenter,
         private categoryFacade: CategoryFacade,
         private dialog: MatDialog,
+        private calculationService: CalculationService,
 
     ) {
         this.tableColumns = ['categoryName', 'description', 'amount', 'payee', 'paymentDate', 'action'];
@@ -47,8 +50,8 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.sort = new MatSort;
 
         this.filterDateForm = new FormGroup({
-            fromDate: new FormControl(),
-            toDate: new FormControl(),
+            fromDate: new FormControl({value: null, disabled: false}),
+            toDate: new FormControl({value: null, disabled: false}),
         });
         // TODO: global Array and push noFilter to the array
         this.incomeOrExpenses = [
@@ -69,12 +72,17 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
     public ngOnInit(): void {
         this.paymentFacade.loadPayments();
         this.categoryFacade.loadCategories();
+        this.loadPayments();
+    }
+
+    private loadPayments(): void {
         this.paymentListPresenter.payments$.pipe(takeUntil(this.ngDestroy)).subscribe((payments: PaymentListVM[]) => {
             this.payments = payments;
+            this.totalIncomeCost = this.calculationService.getTotalIncomeCost(this.payments);
+            this.totalExpenseCost = this.calculationService.getTotalExpenseCost(this.payments);
             this.paymentDataSource.data = this.payments;
         });
     }
-
 
     public ngAfterViewInit(): void {
         this.paymentDataSource.sort = this.sort;
