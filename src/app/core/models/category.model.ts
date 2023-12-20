@@ -1,7 +1,7 @@
 export interface CategoryModel {
   id: string,
   name: string,
-  defaultCategory: boolean,
+  defaultCategory: boolean
 }
 
 export const EMPTY_CATEGORY: CategoryModel = {

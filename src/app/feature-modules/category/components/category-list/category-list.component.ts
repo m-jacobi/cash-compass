@@ -1,18 +1,18 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { CategoryService } from 'src/app/core/data-access/services/category/category.service';
-import { PaymentService } from 'src/app/core/data-access/services/payment/payment.service';
 import { CategoryFacade } from 'src/app/core/facades/category.facade';
 import { CategoryModel, EMPTY_CATEGORY } from '../../../../core/models/category.model';
-import { PaymentModel } from '../../../../core/models/payment.model';
 import { CategoryModalDialogComponent } from '../../../../dialog/category-modal-dialog/category-modal-dialog.component';
 import { NOTIFICATION_TYPE } from '../../../../enum/notification-type.enum';
 import { NotificationService } from '../../../../services/notification.service';
+import { CategoryListVM } from '../../models/category.vm';
+import { CategoryListPresenter } from '../../presenter/category-list.presenter';
 
 
 @Component({
@@ -25,6 +25,7 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(MatPaginator) public paginator: MatPaginator;
     @ViewChild(MatSort) public sort: MatSort;
 
+    public categories$: Observable<CategoryModel[]>;
     public categoryDataSource: MatTableDataSource<CategoryModel>;
     public categoryListTableColumns: string[];
     private categoryIdsPerPayment: string[];
@@ -33,7 +34,7 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
     constructor(
         private categoryService: CategoryService,
         private categoryFacade: CategoryFacade,
-        private paymentService: PaymentService,
+        private categoryListPresenter: CategoryListPresenter,
         private notificationService: NotificationService,
         private dialog: MatDialog,
     ) {
@@ -42,13 +43,15 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.paginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
         this.sort = new MatSort;
         this.categoryIdsPerPayment = [];
+        this.categories$ = this.categoryFacade.categories$;
     }
 
     public ngOnInit(): void {
-        this.getCategories();
-        this.getCategoriesPerPayment();
+        this.categoryFacade.loadCategories();
 
-        console.log('category facade', this.categoryFacade.loadCategories());
+        this.categoryListPresenter.categories$.pipe(takeUntil(this.ngDestroy)).subscribe((categories: CategoryListVM[]) => {
+            this.categoryDataSource.data = categories;
+        });
     }
 
     public ngAfterViewInit(): void {
@@ -62,13 +65,6 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
     public ngOnDestroy(): void {
         this.ngDestroy.next();
         this.ngDestroy.unsubscribe();
-    }
-
-    public getCategories(): void {
-        this.categoryService.getCategories().pipe(takeUntil(this.ngDestroy))
-            .subscribe((categories: CategoryModel[]) => {
-                this.categoryDataSource.data = this.sortCategoriesAsc(categories);
-         })
     }
 
     public filterCategories(event: Event): void  {
@@ -90,40 +86,14 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
         const editDialogRef = this.dialog.open(CategoryModalDialogComponent, {
             data: category
         });
-
     }
 
     public deleteCategory(category: CategoryModel): void {
-        if(!this.categoryIsUsedForPayments(category.id, this.categoryIdsPerPayment)) {
-            this.categoryService.deleteCategory(category.id);
+        this.categoryService.deleteCategory(category.id);
             this.notificationService.showNotification({
                 notificationType: NOTIFICATION_TYPE.SUCCESS,
-                message: 'Die Kategorie wurde erfolgeich entfernt',
+                message: 'Die Kategorie ist mit keiner bestehenden Buchung verbunden und wurde somit erfolgeich entfernt',
                 buttonText: 'OK'
             });
-        } else {
-            this.notificationService.showNotification({
-                notificationType: NOTIFICATION_TYPE.ERROR,
-                message: 'Die Kategorie konnt nicht entfernt werden, da sie noch mit mindestens einer bestehenden Buchung verknüpft ist.',
-                buttonText: 'OK'
-            });
-        }
-    }
-
-    private sortCategoriesAsc(categories: CategoryModel[]): CategoryModel[] {
-        return categories.sort((a: CategoryModel, b: CategoryModel)=> a.name > b.name ? 1:-1 );
-    }
-
-    private getCategoriesPerPayment(): void {
-        this.paymentService.getPayments().pipe(takeUntil(this.ngDestroy))
-            .subscribe((payments: PaymentModel[]) => {
-                payments.forEach((payment: PaymentModel) => {
-                    this.categoryIdsPerPayment.push(payment.categoryId);
-                });
-            });
-    }
-
-    private categoryIsUsedForPayments(categoryId: string, categoryIdsPerPayment: string[]): any {
-        return categoryIdsPerPayment.some((categoryIdsPerPayment: string) => categoryIdsPerPayment === categoryId);
     }
 }

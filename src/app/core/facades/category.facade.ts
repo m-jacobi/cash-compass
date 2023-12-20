@@ -17,9 +17,7 @@ export class CategoryFacade {
     }
 
     public loadCategories(): void {
-        this.categoryService.getCategoriesNew().subscribe((categories: CategoryModel[]) => {
-            // JSON.parse(categories.toString())
-            //console.log('categories', JSON.parse(categories.toString()));
+        this.categoryService.getCategories().subscribe((categories: CategoryModel[]) => {
             this.categoryState.setCategories(JSON.parse(categories.toString()));
         });
     }
