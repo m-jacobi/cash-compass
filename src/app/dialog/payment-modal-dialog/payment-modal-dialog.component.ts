@@ -2,12 +2,12 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { formatISO, parseISO } from 'date-fns';
-import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
-import { CategoryService } from '../../core/data-access/services/category/category.service';
-import { PaymentService } from '../../core/data-access/services/payment/payment.service';
+import { Subject, takeUntil } from 'rxjs';
+import { CategoryFacade } from '../../core/facades/category.facade';
 import { CategoryModel } from '../../core/models/category.model';
 import { PaymentModel } from '../../core/models/payment.model';
 import { PaymentIncomeOrExpense } from '../../models/payment-income-or-expense.model';
+import { PaymentFacade } from './../../core/facades/payment.facade';
 
 @Component({
   selector: 'app-payment-modal-dialog',
@@ -17,21 +17,16 @@ import { PaymentIncomeOrExpense } from '../../models/payment-income-or-expense.m
 export class PaymentModalDialogComponent implements OnInit, OnDestroy {
 
     public form: FormGroup;
-    public filteredCategorie$: Observable<CategoryModel[]>
     public categories: CategoryModel[] = [];
     public incomeOrExpenses: PaymentIncomeOrExpense[];
-    private filteredCategoriesSubject: BehaviorSubject<CategoryModel[]>;
     private readonly ngDestroy = new Subject<void>();
 
     constructor(
-        private paymentService: PaymentService,
-        private categoryService: CategoryService,
+        private paymentFacade: PaymentFacade,
+        private categoryFacade: CategoryFacade,
         public modalRef: MatDialogRef<PaymentModalDialogComponent, PaymentModel>,
         @Inject(MAT_DIALOG_DATA) public data: PaymentModel
     ) {
-        this.filteredCategoriesSubject = new BehaviorSubject<CategoryModel[]>([]);
-        this.filteredCategorie$ = this.filteredCategoriesSubject.asObservable();
-
         this.incomeOrExpenses = [
             {
                 name: 'Einnahme',
@@ -42,10 +37,10 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
             }
         ]
 
-        this.categoryService.getCategories().pipe(takeUntil(this.ngDestroy))
-            .subscribe((categories: CategoryModel[]) => {
-                this.categories = categories;
-                this.filteredCategoriesSubject.next(this.categories);
+        this.categoryFacade.loadCategories();
+        this.categoryFacade.categories$.pipe(takeUntil(this.ngDestroy))
+        .subscribe((categories: CategoryModel[]) => {
+            this.categories = categories;
         });
 
         this.form = new FormGroup({
@@ -56,18 +51,14 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
             payee: new FormControl(this.data.payee),
             incomeOrExpense: new FormControl(this.data.incomeOrExpense, [Validators.required])
         });
+
+        console.log('this.data', this.data);
     }
 
     public ngOnInit(): void { }
 
     get formControl() {
         return this.form.controls;
-    }
-
-    public filterCategories(value: string): void {
-        const filteredCategories = this.categories.filter(c => c.name.toLowerCase().includes(value.toLowerCase()));
-
-        this.filteredCategoriesSubject.next(filteredCategories);
     }
 
     public savePayment(): void {
@@ -82,9 +73,9 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
         }
 
         if(this.data.id){
-            this.paymentService.updatePayment(payment);
+            this.paymentFacade.updatePayment(payment);
         } else {
-            this.paymentService.createPayment(payment);
+            this.paymentFacade.createPayment(payment);
         }
         this.onClose();
     }

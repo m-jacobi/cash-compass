@@ -5,15 +5,15 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { compareAsc, format } from 'date-fns';
-import { Subject, combineLatest, map, takeUntil } from 'rxjs';
-import { CategoryService } from '../../../../core/data-access/services/category/category.service';
-import { PaymentService } from '../../../../core/data-access/services/payment/payment.service';
-import { CategoryModel } from '../../../../core/models/category.model';
+import { Subject, takeUntil } from 'rxjs';
+import { CategoryFacade } from 'src/app/core/facades/category.facade';
+import { PaymentFacade } from '../../../../core/facades/payment.facade';
 import { EMPTY_PAYMENT, PaymentModel } from '../../../../core/models/payment.model';
 import { PaymentModalDialogComponent } from '../../../../dialog/payment-modal-dialog/payment-modal-dialog.component';
 import { DateRange } from '../../../../models/date-range.model';
 import { PaymentIncomeOrExpense } from '../../../../models/payment-income-or-expense.model';
-import { CalculationService } from '../../../../services/calculation.service';
+import { PaymentListVM } from './models/payment.vm';
+import { PaymentListPresenter } from './presenter/payment-list.presenter';
 
 @Component({
   selector: 'app-payment-list',
@@ -23,29 +23,29 @@ import { CalculationService } from '../../../../services/calculation.service';
 
 export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
 
-    public paymentDataSource: MatTableDataSource<PaymentModel>;
-    public tableColumns: string[];
-    public filterDateForm: FormGroup;
-    public incomeOrExpenses: PaymentIncomeOrExpense[];
-    private payments: PaymentModel[];
-    private readonly ngDestroy = new Subject<void>();
-
     @ViewChild(MatPaginator) public paginator: MatPaginator;
     @ViewChild(MatSort) public sort: MatSort;
 
+    public paymentDataSource: MatTableDataSource<PaymentListVM>;
+    public tableColumns: string[];
+    public filterDateForm: FormGroup;
+    public incomeOrExpenses: PaymentIncomeOrExpense[];
+    private payments: PaymentListVM[] = [];
+    private readonly ngDestroy = new Subject<void>();
+
     // TODO: calculationService to private!!
     constructor(
-        private paymentService: PaymentService,
-        private categoryService: CategoryService,
+        private paymentFacade: PaymentFacade,
+        private paymentListPresenter: PaymentListPresenter,
+        private categoryFacade: CategoryFacade,
         private dialog: MatDialog,
-        public calculationService: CalculationService,
 
     ) {
-        this.tableColumns = ['category', 'description', 'amount', 'payee', 'paymentDate', 'action'];
-        this.paymentDataSource = new MatTableDataSource<PaymentModel>([]);
+        this.tableColumns = ['categoryName', 'description', 'amount', 'payee', 'paymentDate', 'action'];
+        this.paymentDataSource = new MatTableDataSource<PaymentListVM>([]);
         this.paginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
         this.sort = new MatSort;
-        this.payments = [];
+
         this.filterDateForm = new FormGroup({
             fromDate: new FormControl(),
             toDate: new FormControl(),
@@ -67,7 +67,12 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public ngOnInit(): void {
-        this.getPayments();
+        this.paymentFacade.loadPayments();
+        this.categoryFacade.loadCategories();
+        this.paymentListPresenter.payments$.pipe(takeUntil(this.ngDestroy)).subscribe((payments: PaymentListVM[]) => {
+            this.payments = payments;
+            this.paymentDataSource.data = this.payments;
+        });
     }
 
 
@@ -97,13 +102,13 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
     public filterDate(value: DateRange): void {
         const fromDate = format(new Date(value.fromDate), "yyyy-MM-dd");
         const toDate = format(new Date(value.toDate), "yyyy-MM-dd");
-        this.paymentDataSource.data = this.payments.filter((payment: PaymentModel) => payment.paymentDate >= fromDate && payment.paymentDate <= toDate )
+        this.paymentDataSource.data = this.payments.filter((payment: PaymentListVM) => payment.paymentDate >= fromDate && payment.paymentDate <= toDate )
             .sort((a, b) => compareAsc(new Date(a.paymentDate), new Date(b.paymentDate)));
     }
 
     public filterByIncomeOrExpense(event: any): void {
         if (event.value != "noFilter") {
-            const filteredDataByIncomeOrExpense = this.payments.filter((payment: PaymentModel) => payment.incomeOrExpense === event.value);
+            const filteredDataByIncomeOrExpense = this.payments.filter((payment: PaymentListVM) => payment.incomeOrExpense === event.value);
             this.paymentDataSource.data = filteredDataByIncomeOrExpense;
         } else {
             this.paymentDataSource.data = this.payments;
@@ -123,23 +128,6 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public deletePayment(paymentId: string): void {
-        this.paymentService.deletePayment(paymentId);
-    }
-
-    private getPayments(): void {
-        const payments$ = this.paymentService.getPayments();
-        const categories$ = this.categoryService.getCategories();
-
-        combineLatest([payments$, categories$])
-            .pipe(map(([payment, category]) => {
-                return payment.map(paymentData => {
-                    const categoryData = category.find((c: CategoryModel) => c.id === paymentData.categoryId);
-                    return {...paymentData, category: categoryData};
-            });
-        })).pipe(takeUntil(this.ngDestroy)).subscribe((payment: PaymentModel[]) =>  {
-            this.payments = payment;
-            console.log('payment', payment);
-            this.paymentDataSource.data = payment;
-        });
+        this.paymentFacade.deletePayment(paymentId);
     }
 }

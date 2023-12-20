@@ -1,32 +1,19 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/tauri';
-import { from, Observable, ReplaySubject } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { PaymentModel } from 'src/app/core/models/payment.model';
 import { NOTIFICATION_TYPE } from 'src/app/enum/notification-type.enum';
 import { NotificationService } from 'src/app/services/notification.service';
 
 
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class PaymentService {
 
-    private paymentsSubject: ReplaySubject<PaymentModel[]>;
-
-    constructor(private notificationService: NotificationService) {
-        this.paymentsSubject = new ReplaySubject<PaymentModel[]>(1);
-        this.fetchPayments();
-    }
-
-    private fetchPayments(): void {
-        from(invoke<PaymentModel[]>('get_payments')).subscribe((payments: PaymentModel[]) => {
-            this.paymentsSubject.next(JSON.parse(payments.toString()));
-        });
-    }
+    constructor(private notificationService: NotificationService) {}
 
     public getPayments(): Observable<PaymentModel[]> {
-        return this.paymentsSubject.asObservable();
+        return from(invoke<PaymentModel[]>('get_payments'));
     }
 
     public createPayment(payment: PaymentModel): void {
@@ -52,7 +39,6 @@ export class PaymentService {
 
             });
         });
-        this.fetchPayments();
     }
 
     public updatePayment(payment: PaymentModel): void {
@@ -79,7 +65,6 @@ export class PaymentService {
 
             });
         });
-        this.fetchPayments();
     }
 
     public deletePayment(paymentId: string): void {
@@ -100,6 +85,5 @@ export class PaymentService {
 
             });
         });
-        this.fetchPayments();
     }
 }

@@ -1,11 +1,10 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { CategoryService } from '../../../../core/data-access/services/category/category.service';
 import { CategoryFacade } from '../../../../core/facades/category.facade';
 import { CategoryModel, EMPTY_CATEGORY } from '../../../../core/models/category.model';
 import { CategoryModalDialogComponent } from '../../../../dialog/category-modal-dialog/category-modal-dialog.component';
@@ -25,14 +24,11 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(MatPaginator) public paginator: MatPaginator;
     @ViewChild(MatSort) public sort: MatSort;
 
-    public categories$: Observable<CategoryModel[]>;
     public categoryDataSource: MatTableDataSource<CategoryModel>;
     public categoryListTableColumns: string[];
-    private categoryIdsPerPayment: string[];
     private readonly ngDestroy = new Subject<void>();
 
     constructor(
-        private categoryService: CategoryService,
         private categoryFacade: CategoryFacade,
         private categoryListPresenter: CategoryListPresenter,
         private notificationService: NotificationService,
@@ -42,8 +38,6 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.categoryDataSource = new MatTableDataSource<CategoryModel>([]);
         this.paginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
         this.sort = new MatSort;
-        this.categoryIdsPerPayment = [];
-        this.categories$ = this.categoryFacade.categories$;
     }
 
     public ngOnInit(): void {

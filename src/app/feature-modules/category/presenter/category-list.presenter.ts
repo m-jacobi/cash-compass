@@ -20,8 +20,6 @@ export class CategoryListPresenter {
         this.categories$ = this.categorySource.asObservable();
         this.categoryIdsPerPayment = [];
 
-        this.fetchCategoryIdsForPayments();
-
         this.categoryFacade.categories$.pipe(
             map((categories: CategoryModel[]) => categories.map((category: CategoryModel) => this.mapToVm(category)))
         ).subscribe((categories: CategoryListVM[]) => this.categorySource.next(this.sortCategoriesAsc(categories)));
@@ -33,7 +31,7 @@ export class CategoryListPresenter {
             id: category.id,
             name: category.name,
             defaultCategory: category.defaultCategory,
-            isCategoryUsed: this.isCategoryUsedInPayments(category.id, this.categoryIdsPerPayment)
+            isCategoryUsed: true
         }
     }
 

@@ -1,15 +1,13 @@
 import { format } from "date-fns";
-import { CategoryModel } from 'src/app/core/models/category.model';
 
 export interface PaymentModel {
-  id: string;
-  description: string;
-  amount: number;
-  paymentDate: string;
-  categoryId: string;
-  payee: string;
-  incomeOrExpense: boolean;
-  category?: CategoryModel;
+    id: string;
+    description: string;
+    amount: number;
+    paymentDate: string;
+    categoryId: string;
+    payee: string;
+    incomeOrExpense: boolean;
 };
 
 export const EMPTY_PAYMENT: PaymentModel = {
