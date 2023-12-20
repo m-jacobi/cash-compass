@@ -20,7 +20,7 @@ export class CategoryListPresenter {
         this.categories$ = this.categorySource.asObservable();
         this.categoryIdsPerPayment = [];
 
-        this.getCategoriesPerPayment();
+        this.fetchCategoryIdsForPayments();
 
         this.categoryFacade.categories$.pipe(
             map((categories: CategoryModel[]) => categories.map((category: CategoryModel) => this.mapToVm(category)))
@@ -33,11 +33,11 @@ export class CategoryListPresenter {
             id: category.id,
             name: category.name,
             defaultCategory: category.defaultCategory,
-            isCategoryUsed: this.categoryIsUsedForPayments(category.id, this.categoryIdsPerPayment)
+            isCategoryUsed: this.isCategoryUsedInPayments(category.id, this.categoryIdsPerPayment)
         }
     }
 
-    private getCategoriesPerPayment(): void {
+    private fetchCategoryIdsForPayments(): void {
         this.paymentService.getPayments()
             .subscribe((payments: PaymentModel[]) => {
                 payments.forEach((payment: PaymentModel) => {
@@ -46,7 +46,7 @@ export class CategoryListPresenter {
             });
     }
 
-    private categoryIsUsedForPayments(categoryId: string, categoryIdsPerPayment: string[]): boolean {
+    private isCategoryUsedInPayments(categoryId: string, categoryIdsPerPayment: string[]): boolean {
         return categoryIdsPerPayment.some((categoryIdsPerPayment: string) => categoryIdsPerPayment === categoryId);
     }
 

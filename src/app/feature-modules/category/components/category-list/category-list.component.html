@@ -32,7 +32,7 @@
                     mat-icon-button
                     [disabled]="row.isCategoryUsed"
                     matTooltip="Kategorie entfernen"
-                    (click)="deleteCategory(row)">
+                    (click)="deleteCategory(row.id)">
                     <mat-icon>delete</mat-icon>
                 </button>
             </td>

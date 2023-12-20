@@ -1,13 +1,13 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { formatISO, parseISO } from 'date-fns';
 import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
-import { CategoryService } from 'src/app/core/data-access/services/category/category.service';
-import { PaymentService } from 'src/app/core/data-access/services/payment/payment.service';
+import { CategoryService } from '../../core/data-access/services/category/category.service';
+import { PaymentService } from '../../core/data-access/services/payment/payment.service';
 import { CategoryModel } from '../../core/models/category.model';
 import { PaymentModel } from '../../core/models/payment.model';
 import { PaymentIncomeOrExpense } from '../../models/payment-income-or-expense.model';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-payment-modal-dialog',

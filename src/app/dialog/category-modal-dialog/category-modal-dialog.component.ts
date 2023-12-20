@@ -1,8 +1,7 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Subject } from 'rxjs/internal/Subject';
-import { CategoryService } from '../../core/data-access/services/category/category.service';
+import { CategoryFacade } from 'src/app/core/facades/category.facade';
 import { CategoryModel } from '../../core/models/category.model';
 
 @Component({
@@ -10,22 +9,18 @@ import { CategoryModel } from '../../core/models/category.model';
   templateUrl: './category-modal-dialog.component.html',
   styleUrls: ['./category-modal-dialog.component.scss']
 })
-export class CategoryModalDialogComponent implements OnInit, OnDestroy {
+export class CategoryModalDialogComponent {
 
     public categoryForm: FormGroup;
-    private readonly ngDestroy = new Subject<void>();
 
     constructor(
-        private categoryService: CategoryService,
-        public modalRef: MatDialogRef<CategoryModalDialogComponent, CategoryModel>,
+        private categoryFacade: CategoryFacade,
+        private modalRef: MatDialogRef<CategoryModalDialogComponent, CategoryModel>,
         @Inject(MAT_DIALOG_DATA) public data: CategoryModel
     ) {
         this.categoryForm = new FormGroup({
             name: new FormControl(this.data.name, Validators.required)
         });
-    }
-
-    public ngOnInit(): void {
     }
 
     public get formControl() {
@@ -40,9 +35,9 @@ export class CategoryModalDialogComponent implements OnInit, OnDestroy {
         }
 
         if(this.data.id) {
-            this.categoryService.updateCategory(category);
+            this.categoryFacade.updateCategory(category);
         } else {
-            this.categoryService.createCategory(category);
+            this.categoryFacade.createCategory(category);
         }
         this.onClose();
     }
@@ -50,10 +45,4 @@ export class CategoryModalDialogComponent implements OnInit, OnDestroy {
     public onClose(): void {
         this.modalRef.close();
     }
-
-    public ngOnDestroy(): void {
-        this.ngDestroy.next();
-        this.ngDestroy.unsubscribe();
-    }
-
 }

@@ -5,8 +5,8 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { CategoryService } from 'src/app/core/data-access/services/category/category.service';
-import { CategoryFacade } from 'src/app/core/facades/category.facade';
+import { CategoryService } from '../../../../core/data-access/services/category/category.service';
+import { CategoryFacade } from '../../../../core/facades/category.facade';
 import { CategoryModel, EMPTY_CATEGORY } from '../../../../core/models/category.model';
 import { CategoryModalDialogComponent } from '../../../../dialog/category-modal-dialog/category-modal-dialog.component';
 import { NOTIFICATION_TYPE } from '../../../../enum/notification-type.enum';
@@ -48,7 +48,6 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public ngOnInit(): void {
         this.categoryFacade.loadCategories();
-
         this.categoryListPresenter.categories$.pipe(takeUntil(this.ngDestroy)).subscribe((categories: CategoryListVM[]) => {
             this.categoryDataSource.data = categories;
         });
@@ -88,8 +87,8 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
-    public deleteCategory(category: CategoryModel): void {
-        this.categoryService.deleteCategory(category.id);
+    public deleteCategory(categoryId: string): void {
+        this.categoryFacade.deleteCategory(categoryId);
             this.notificationService.showNotification({
                 notificationType: NOTIFICATION_TYPE.SUCCESS,
                 message: 'Die Kategorie ist mit keiner bestehenden Buchung verbunden und wurde somit erfolgeich entfernt',

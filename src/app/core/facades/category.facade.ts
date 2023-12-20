@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { CategoryServiceNew } from "../data-access/services/category-new/category.service.new";
+
+import { CategoryService } from "../data-access/services/category/category.service";
 import { CategoryModel } from "../models/category.model";
 import { CategoryState } from "../states/category.state";
 
@@ -10,7 +11,7 @@ export class CategoryFacade {
     public categories$: Observable<CategoryModel[]>;
 
     constructor(
-        private categoryService: CategoryServiceNew,
+        private categoryService: CategoryService,
         private categoryState: CategoryState
     ) {
         this.categories$ = this.categoryState.categories$;
@@ -22,4 +23,18 @@ export class CategoryFacade {
         });
     }
 
+    public createCategory(category: CategoryModel): void {
+        this.categoryService.createCategory(category);
+        this.loadCategories();
+    }
+
+    public updateCategory(category: CategoryModel): void {
+        this.categoryService.updateCategory(category);
+        this.loadCategories();
+    }
+
+    public deleteCategory(categoryId: string): void {
+        this.categoryService.deleteCategory(categoryId);
+        this.loadCategories();
+    }
 }
