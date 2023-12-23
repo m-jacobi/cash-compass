@@ -13,15 +13,14 @@ import { EMPTY_PAYMENT, PaymentModel } from '../../../../core/models/payment.mod
 import { PaymentModalDialogComponent } from '../../../../dialog/payment-modal-dialog/payment-modal-dialog.component';
 import { DateRange } from '../../../../models/date-range.model';
 import { PaymentIncomeOrExpense } from '../../../../models/payment-income-or-expense.model';
-import { PaymentListVM } from './models/payment.vm';
-import { PaymentListPresenter } from './presenter/payment-list.presenter';
+import { PaymentListVM } from '../../models/payment.vm';
+import { PaymentListPresenter } from '../../presenter/payment-list.presenter';
 
 @Component({
   selector: 'app-payment-list',
   templateUrl: './payment-list.component.html',
   styleUrls: ['./payment-list.component.scss'],
 })
-
 export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @ViewChild(MatPaginator) public paginator: MatPaginator;
@@ -50,8 +49,8 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.sort = new MatSort;
 
         this.filterDateForm = new FormGroup({
-            fromDate: new FormControl({value: null, disabled: false}),
-            toDate: new FormControl({value: null, disabled: false}),
+            fromDate: new FormControl<Date | null>(null),
+            toDate: new FormControl<Date | null>(null),
         });
         // TODO: global Array and push noFilter to the array
         this.incomeOrExpenses = [
@@ -66,7 +65,9 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
                 name: 'Ausgabe',
                 state: false,
             }
-        ]
+        ];
+
+        this.bindFormChanges();
     }
 
     public ngOnInit(): void {
@@ -82,6 +83,19 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
             this.totalExpenseCost = this.calculationService.getTotalExpenseCost(this.payments);
             this.paymentDataSource.data = this.payments;
         });
+    }
+
+    private bindFormChanges(): void {
+        this.filterDateForm.valueChanges
+            .pipe(takeUntil(this.ngDestroy))
+            .subscribe((values: DateRange) => {
+                console.log('vor')
+                if(values.fromDate && values.toDate) {
+                    console.log('if', values)
+                    this.filterDate(values)
+                }
+            });
+
     }
 
     public ngAfterViewInit(): void {
@@ -106,12 +120,16 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    // TODO: Reset Date Range
     public filterDate(value: DateRange): void {
         const fromDate = format(new Date(value.fromDate), "yyyy-MM-dd");
         const toDate = format(new Date(value.toDate), "yyyy-MM-dd");
         this.paymentDataSource.data = this.payments.filter((payment: PaymentListVM) => payment.paymentDate >= fromDate && payment.paymentDate <= toDate )
             .sort((a, b) => compareAsc(new Date(a.paymentDate), new Date(b.paymentDate)));
+    }
+
+    public resetFilterDate(): void {
+        this.filterDateForm.reset();
+        this.loadPayments();
     }
 
     public filterByIncomeOrExpense(event: any): void {

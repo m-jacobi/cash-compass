@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject, combineLatest, map } from 'rxjs';
-import { CategoryFacade } from '../../../../../core/facades/category.facade';
-import { PaymentFacade } from '../../../../../core/facades/payment.facade';
-import { CategoryModel } from '../../../../../core/models/category.model';
-import { PaymentModel } from '../../../../../core/models/payment.model';
-import { TDictionary, getEntityDict } from '../../../../../utils/dictionary.util';
+import { CategoryFacade } from '../../../core/facades/category.facade';
+import { PaymentFacade } from '../../../core/facades/payment.facade';
+import { CategoryModel } from '../../../core/models/category.model';
+import { PaymentModel } from '../../../core/models/payment.model';
+import { TDictionary, getEntityDict } from '../../../utils/dictionary.util';
 import { PaymentListVM } from '../models/payment.vm';
 
 @Injectable({providedIn: 'root'})

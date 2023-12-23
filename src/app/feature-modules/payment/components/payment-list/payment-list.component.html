@@ -18,29 +18,25 @@
     <div class="payment-list__filter_date">
         <form [formGroup]="filterDateForm">
             <mat-form-field class="payment-list__filter-date__form" appearance="outline">
-                <input matInput
-                    [matDatepicker]="fromDate"
-                    placeholder="Von"
-                    matTooltip="Startdatum"
-                    formControlName="fromDate">
-                <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
-                <mat-datepicker #fromDate></mat-datepicker>
-            </mat-form-field>
-            <mat-form-field class="payment-list__filter-date__form" appearance="outline">
-                <input matInput
-                    [matDatepicker]="toDate"
-                    placeholder="Bis"
-                    matTooltip="Enddatum"
-                    formControlName="toDate">
-                <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
-                <mat-datepicker #toDate></mat-datepicker>
+                <mat-date-range-input
+                [formGroup]="filterDateForm"
+                [rangePicker]="dateRangePicker"
+                [comparisonStart]="filterDateForm.value.fromDate"
+                [comparisonEnd]="filterDateForm.value.toDate">
+                    <input matStartDate placeholder="Startdatum" formControlName="fromDate">
+                    <input matEndDate placeholder="Enddatum" formControlName="toDate">
+                </mat-date-range-input>
+            <mat-datepicker-toggle matIconSuffix [for]="dateRangePicker"></mat-datepicker-toggle>
+            <mat-date-range-picker #dateRangePicker></mat-date-range-picker>
             </mat-form-field>
             <button
-                mat-flat-button
-                [disabled]="!filterDateForm.valid"
+                mat-mini-fab
+                [disabled]="!filterDateForm.dirty"
                 color="primary"
-                class="primary"
-                (click)="filterDate(filterDateForm.value)">Datum suchen</button>
+                (click)="resetFilterDate()"
+            >
+            <mat-icon>close</mat-icon>
+        </button>
         </form>
     </div>
 </div>
