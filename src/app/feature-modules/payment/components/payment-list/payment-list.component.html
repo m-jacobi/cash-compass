@@ -15,7 +15,7 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <div class="payment-list__filter_date">
+    <div class="payment-list__filter-date">
         <form [formGroup]="filterDateForm">
             <mat-form-field class="payment-list__filter-date__form" appearance="outline">
                 <mat-date-range-input
@@ -27,16 +27,11 @@
                     <input matEndDate placeholder="Enddatum" formControlName="toDate">
                 </mat-date-range-input>
             <mat-datepicker-toggle matIconSuffix [for]="dateRangePicker"></mat-datepicker-toggle>
+            <mat-datepicker-toggle matSuffix (click)="resetFilterDate()">
+                <mat-icon matDatepickerToggleIcon>clear</mat-icon>
+            </mat-datepicker-toggle>
             <mat-date-range-picker #dateRangePicker></mat-date-range-picker>
             </mat-form-field>
-            <button
-                mat-mini-fab
-                [disabled]="!filterDateForm.dirty"
-                color="primary"
-                (click)="resetFilterDate()"
-            >
-            <mat-icon>close</mat-icon>
-        </button>
         </form>
     </div>
 </div>

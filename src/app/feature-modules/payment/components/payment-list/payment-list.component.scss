@@ -28,10 +28,12 @@
 
 .payment-list__filter-date {
     flex: auto;
+    text-align: right;
 }
 
+
 .payment-list__filter-date__form {
-    width: 250px;
+    width: 320px;
     margin-right: 11px;
 }
 
@@ -51,5 +53,10 @@
     font-size: large;
 }
 
+.mat-datepicker-toggle {
+    position: relative;
+    top: -3px;
+    float: right;
+}
 
 
