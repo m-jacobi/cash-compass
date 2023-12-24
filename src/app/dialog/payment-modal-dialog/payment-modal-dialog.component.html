@@ -1,68 +1,71 @@
 <h2 mat-dialog-title>{{data.id ? 'Buchung bearbeiten' : 'Neue Buchung erstellen'}}</h2>
-<form [formGroup]="form">
-    <div class="form-category-description">
-        <mat-form-field  appearance="fill" *ngIf="categories">
-            <mat-label>Kategorie</mat-label>
-            <mat-select
-                formControlName="category"
-                placeholder="Kategorie">
-                <mat-option *ngFor="let category of categories" [value]="category.id">
-                    {{ category.name }}
-                </mat-option>
-            </mat-select>
-            <mat-error *ngIf="formControl['category'].invalid && formControl['category'].touched">
-                <label *ngIf="formControl['category'].errors && formControl['category'].errors['required']">Dies ist ein Pflichtfeld.</label>
-            </mat-error>
-        </mat-form-field>
-    </div>
-    <div class="form-category-description">
-        <mat-form-field appearance="fill">
-            <mat-label>Beschreibung</mat-label>
-            <input matInput formControlName="description" placeholder="Beschreibung">
-        </mat-form-field>
-    </div>
-    <div class="form-pair form-amount-date">
-        <mat-form-field appearance="fill" floatLabel="always">
-            <mat-label>Betrag</mat-label>
-            <input matInput formControlName="amount" type="number" min="0" placeholder="Betrag">
-            <mat-error *ngIf="formControl['amount'].invalid && formControl['amount'].touched">
-                <label *ngIf="formControl['amount'].errors && formControl['amount'].errors['required']">Dies ist ein Pflichtfeld.</label>
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-            <mat-label>Buchungsdatum</mat-label>
-            <input
-                autocomplete="off"
-                matInput
-                formControlName="paymentDate"
-                [matDatepicker]="paymentDate">
-            <mat-datepicker-toggle matSuffix [for]="paymentDate"></mat-datepicker-toggle>
-            <mat-datepicker #paymentDate></mat-datepicker>
-        </mat-form-field>
-    </div>
-    <div class="form-pair">
-        <mat-form-field appearance="fill">
-            <mat-label>Zahlungsempfänger</mat-label>
-            <input  matInput formControlName="payee" placeholder="Zahlungsempfänger">
-        </mat-form-field>
-        <mat-form-field  appearance="fill" *ngIf="categories">
-            <mat-label>Einnahme/Ausagbe</mat-label>
-            <mat-select
-                formControlName="incomeOrExpense"
-                placeholder="Einnahme/Ausagbe">
-                <mat-option *ngFor="let incomeOrExpense of incomeOrExpenses" [value]="incomeOrExpense.state">
-                    {{ incomeOrExpense.name }}
-                </mat-option>
-            </mat-select>
-            <mat-error *ngIf="formControl['incomeOrExpense'].invalid && formControl['incomeOrExpense'].touched">
-                <label *ngIf="formControl['incomeOrExpense'].errors && formControl['incomeOrExpense'].errors['required']">Dies ist ein Pflichtfeld.</label>
-            </mat-error>
-        </mat-form-field>
+<form [formGroup]="paymentForm">
+    <div class="payment-form">
+        <div>
+            <mat-form-field class="payment-form__category" appearance="fill" *ngIf="categories">
+                <mat-label>Kategorie</mat-label>
+                <mat-select
+                    formControlName="category"
+                    placeholder="Kategorie">
+                    <mat-option *ngFor="let category of categories" [value]="category.id">
+                        {{ category.name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formControl['category'].invalid && formControl['category'].touched">
+                    <label *ngIf="formControl['category'].errors && formControl['category'].errors['required']">Dies ist ein Pflichtfeld.</label>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="payment-form__description" appearance="fill">
+                <mat-label>Beschreibung</mat-label>
+                <input matInput formControlName="description" placeholder="Beschreibung">
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field class="payment-form__amount" appearance="fill" floatLabel="always">
+                <mat-label>Betrag</mat-label>
+                <input matInput formControlName="amount" type="number" min="0" placeholder="Betrag">
+                <mat-error *ngIf="formControl['amount'].invalid && formControl['amount'].touched">
+                    <label *ngIf="formControl['amount'].errors && formControl['amount'].errors['required']">Dies ist ein Pflichtfeld.</label>
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="payment-form__date" appearance="fill">
+                <mat-label>Buchungsdatum</mat-label>
+                <input
+                    autocomplete="off"
+                    matInput
+                    formControlName="paymentDate"
+                    [matDatepicker]="paymentDate">
+                <mat-datepicker-toggle matSuffix [for]="paymentDate"></mat-datepicker-toggle>
+                <mat-datepicker #paymentDate></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="payment-form__payee" appearance="fill">
+                <mat-label>Zahlungsempfänger</mat-label>
+                <input  matInput formControlName="payee" placeholder="Zahlungsempfänger">
+            </mat-form-field>
+            <mat-form-field class="payment-form__income-or-expense" appearance="fill" *ngIf="categories">
+                <mat-label>Einnahme/Ausagbe</mat-label>
+                <mat-select
+                    formControlName="incomeOrExpense"
+                    placeholder="Einnahme/Ausagbe">
+                    <mat-option *ngFor="let incomeOrExpense of incomeOrExpenses" [value]="incomeOrExpense.state">
+                        {{ incomeOrExpense.name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formControl['incomeOrExpense'].invalid && formControl['incomeOrExpense'].touched">
+                    <label *ngIf="formControl['incomeOrExpense'].errors && formControl['incomeOrExpense'].errors['required']">Dies ist ein Pflichtfeld.</label>
+                </mat-error>
+            </mat-form-field>
+        </div>
     </div>
 
-    <div mat-dialog-actions>
-        <button type="submit" mat-raised-button color="primary" (click)="savePayment()" [disabled]="form.invalid">Speichern</button>
-        <button mat-button class="mat-focus-indicator mat-raised-button mat-button-base mat-raised" (click)="onClose()">Abbrechen</button>
+    <div mat-dialog-actions class="payment-dialog__buttons">
+        <button mat-raised-button class="payment-dialog__button-close" (click)="onClose()">Abbrechen</button>
+        <button mat-raised-button type="submit" color="primary" (click)="savePayment()" [disabled]="paymentForm.invalid">Speichern</button>
     </div>
 </form>
 

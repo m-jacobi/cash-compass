@@ -16,7 +16,7 @@ import { PaymentFacade } from './../../core/facades/payment.facade';
 })
 export class PaymentModalDialogComponent implements OnInit, OnDestroy {
 
-    public form: FormGroup;
+    public paymentForm: FormGroup;
     public categories: CategoryModel[] = [];
     public incomeOrExpenses: PaymentIncomeOrExpense[];
     private readonly ngDestroy = new Subject<void>();
@@ -43,22 +43,20 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
             this.categories = categories;
         });
 
-        this.form = new FormGroup({
-            description: new FormControl(this.data.description),
-            amount: new FormControl(this.data.amount, [Validators.required]),
-            paymentDate: new FormControl(parseISO(this.data.paymentDate)),
-            category: new FormControl(this.data.categoryId, [Validators.required]),
-            payee: new FormControl(this.data.payee),
-            incomeOrExpense: new FormControl(this.data.incomeOrExpense, [Validators.required])
+        this.paymentForm = new FormGroup({
+            description: new FormControl<string>(this.data.description),
+            amount: new FormControl<number>(this.data.amount, [Validators.required]),
+            paymentDate: new FormControl<Date>(parseISO(this.data.paymentDate)),
+            category: new FormControl<string>(this.data.categoryId, [Validators.required]),
+            payee: new FormControl<string>(this.data.payee),
+            incomeOrExpense: new FormControl<boolean>(this.data.incomeOrExpense, [Validators.required])
         });
-
-        console.log('this.data', this.data);
     }
 
     public ngOnInit(): void { }
 
-    get formControl() {
-        return this.form.controls;
+    public get formControl() {
+        return this.paymentForm.controls;
     }
 
     public savePayment(): void {

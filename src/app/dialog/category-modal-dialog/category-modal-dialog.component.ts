@@ -19,7 +19,7 @@ export class CategoryModalDialogComponent {
         @Inject(MAT_DIALOG_DATA) public data: CategoryModel
     ) {
         this.categoryForm = new FormGroup({
-            name: new FormControl(this.data.name, Validators.required)
+            name: new FormControl<string>(this.data.name, Validators.required)
         });
     }
 
