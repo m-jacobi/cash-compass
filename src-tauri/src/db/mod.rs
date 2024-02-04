@@ -73,35 +73,32 @@ pub fn delete_payment(id: String) {
     .expect("Error deleting payment");
 }
 
-pub fn get_categories() -> String {
+pub fn get_categories() -> Result<String, String> {
     let connection = &mut db_connection();
     let get_all_categories = categories::dsl::categories
         .load::<Category>( connection)
         .expect("Error loading categories");
-    let get_categories_json = serde_json::to_string(&get_all_categories).unwrap();
-    get_categories_json
+    let get_categories_json = serde_json::to_string(&get_all_categories)
+        .map_err(|e| format!("Error converting categories to JSON: {}", e))?;
+    Ok(get_categories_json)
 }
 
-pub fn create_category(category: Category) -> String {
+pub fn create_category(category: Category) {
     let connection = &mut db_connection();
 
-    let create_category = diesel::insert_into(categories::table)
+    diesel::insert_into(categories::table)
         .values(&category)
         .execute(connection)
         .expect("Error saving new categorie");
-    let create_category_json = serde_json::to_string(&create_category).unwrap();
-    create_category_json
 }
 
-pub fn update_category(id: String, category: UpdateCategory) -> String {
+pub fn update_category(id: String, category: UpdateCategory) {
     let connection = &mut db_connection();
 
-    let update_category = diesel::update(categories::dsl::categories.find(id))
+    diesel::update(categories::dsl::categories.find(id))
         .set(category)
         .execute(connection)
         .expect("Error saving update category");
-    let update_category_json = serde_json::to_string(&update_category).unwrap();
-    update_category_json
 }
 
 pub fn delete_category(id: String) {

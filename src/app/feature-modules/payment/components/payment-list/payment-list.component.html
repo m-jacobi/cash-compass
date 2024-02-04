@@ -1,0 +1,119 @@
+<div class="payment-list__filter">
+    <div class="payment-list__filter-base">
+        <mat-form-field class="payment-list__filter-base__search" appearance="outline"
+            matTooltip="Buchungen filtern">
+            <mat-label>Suche</mat-label>
+            <input matInput (keyup)="filterPayments($event)" placeholder="Bitte einen Suchbegriff eingeben" #input>
+        </mat-form-field>
+        <mat-form-field class="payment-list__filter-base__income-expense" appearance="outline" >
+            <mat-select (selectionChange)="filterByIncomeOrExpense($event)"
+                placeholder="Einnahme / Ausgabe"
+                matTooltip="Nach Einnahmen oder Ausgaben filtern">
+                <mat-option *ngFor="let incomeOrExpense of incomeOrExpenses" [value]="incomeOrExpense.state">
+                    {{ incomeOrExpense.name }}
+                    </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="payment-list__filter-date">
+        <form [formGroup]="filterDateForm">
+            <mat-form-field class="payment-list__filter-date__form" appearance="outline">
+                <mat-date-range-input
+                [formGroup]="filterDateForm"
+                [rangePicker]="dateRangePicker"
+                [comparisonStart]="filterDateForm.value.fromDate"
+                [comparisonEnd]="filterDateForm.value.toDate">
+                    <input matStartDate placeholder="Startdatum" formControlName="fromDate">
+                    <input matEndDate placeholder="Enddatum" formControlName="toDate">
+                </mat-date-range-input>
+            <mat-datepicker-toggle matIconSuffix [for]="dateRangePicker"></mat-datepicker-toggle>
+            <mat-datepicker-toggle matSuffix (click)="resetFilterDate()">
+                <mat-icon matDatepickerToggleIcon>clear</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-date-range-picker #dateRangePicker></mat-date-range-picker>
+            </mat-form-field>
+        </form>
+    </div>
+</div>
+
+
+<div class="payment-list__table">
+    <table mat-table [dataSource]="paymentDataSource" matSort>
+
+        <!-- Category Column -->
+        <ng-container matColumnDef="categoryName">
+            <th mat-header-cell mat-sort-header="categoryName" *matHeaderCellDef> Kategorie </th>
+            <td mat-cell *matCellDef="let row"> {{row.categoryName}} </td>
+            <td mat-footer-cell *matFooterCellDef>Einnahmen Total:</td>
+        </ng-container>
+
+        <!-- Description Column -->
+        <ng-container matColumnDef="description">
+            <th mat-header-cell mat-sort-header="description" *matHeaderCellDef> Beschreibung </th>
+            <td mat-cell *matCellDef="let row"> {{row.description}} </td>
+            <td mat-footer-cell class="income" *matFooterCellDef>{{ totalIncomeCost | number:'.2-2' }} &#8364; </td>
+        </ng-container>
+
+        <!-- Amount Column -->
+        <!-- TODO: moved color seeting into the scss -->
+        <ng-container matColumnDef="amount">
+            <th mat-header-cell mat-sort-header="amount" *matHeaderCellDef> Betrag </th>
+            <td mat-cell *matCellDef="let row" [style.color]="row.incomeOrExpense === true ? '#00cc00' : '#cc0000'"> {{row.amount | number:'.2-2'}} </td>
+            <td mat-footer-cell *matFooterCellDef>Ausgaben Total:</td>
+        </ng-container>
+
+        <!-- Payee Column -->
+        <ng-container matColumnDef="payee">
+            <th mat-header-cell mat-sort-header="payee" *matHeaderCellDef> Zahlungsempfänger </th>
+            <td mat-cell *matCellDef="let row"> {{row.payee}} </td>
+            <td mat-footer-cell class="expense" *matFooterCellDef>{{ totalExpenseCost | number:'.2-2' }} &#8364; </td>
+        </ng-container>
+
+        <!-- PaymentDate Column -->
+        <ng-container matColumnDef="paymentDate">
+            <th mat-header-cell mat-sort-header="paymentDate" *matHeaderCellDef> Buchungsdatum </th>
+            <td mat-cell *matCellDef="let row"> {{row.paymentDate | date: 'dd.MM.yyyy '}} </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+
+        <ng-container matColumnDef="action" >
+            <th mat-header-cell *matHeaderCellDef>
+                <button
+                    mat-icon-button color="primary"
+                    matTooltip="Neue Buchung"
+                    (click)="openCreatePaymentDialog()">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </th>
+            <td mat-cell *matCellDef="let row;">
+                <button
+                    mat-icon-button color="accent"
+                    matTooltip="Buchung bearbeiten"
+                    (click)="openEditPaymentDialog(row)">
+                    <mat-icon aria-label="Edit">edit</mat-icon>
+                </button>
+                <button
+                    mat-icon-button color="warn"
+                    matTooltip="Buchung entfernen"
+                    (click)="deletePayment(row.id)">
+                        <mat-icon aria-label="Delete">delete</mat-icon>
+                </button>
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="tableColumns sticky: true"></tr>
+        <tr mat-row class="category-list__table-row" *matRowDef="let row; columns: tableColumns;"></tr>
+        <tr mat-footer-row *matFooterRowDef="tableColumns sticky: true"></tr>
+
+        <tr class="no-data" *matNoDataRow>
+            <td>Keine Buchungen gefunden.</td>
+        </tr>
+    </table>
+</div>
+<mat-paginator
+    [pageIndex]="0"
+    [pageSize]="10"
+    [pageSizeOptions]="[5, 10, 25, 100]">
+</mat-paginator>
+

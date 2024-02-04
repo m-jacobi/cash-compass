@@ -11,16 +11,16 @@ rust-version = "1.59"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "1.2.1", features = [] }
+tauri-build = { version = "1.5.1", features = [] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.2.2", features = ["fs-create-dir", "fs-read-file", "fs-write-file", "window-all"] }
-diesel = { version = "2.0.0", features = ["sqlite", "uuid"] }
-diesel_migrations = { version = "2.0.0", features = ["sqlite"] }
-dotenvy = "0.15"
-chrono = "0.4.23"
+tauri = { version = "1.5.4", features = ["fs-create-dir", "fs-read-file", "fs-write-file", "window-all"] }
+diesel = { version = "2.1.4", features = ["sqlite", "uuid"] }
+diesel_migrations = { version = "2.1.0", features = ["sqlite"] }
+dotenvy = "0.15.7"
+chrono = "0.4.33"
 
 [dependencies.uuid]
 version = "1.2.2"
