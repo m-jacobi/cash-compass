@@ -1,3 +1,4 @@
+
 import { MatPaginatorIntl } from "@angular/material/paginator";
 import { getMatPaginatorIntl } from "./paginator-intl";
 

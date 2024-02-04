@@ -1,11 +1,11 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { map, Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { EMPTY_CATEGORY } from '../../core/models/category.model';
+import { EMPTY_PAYMENT } from '../../core/models/payment.model';
 import { CategoryModalDialogComponent } from '../../dialog/category-modal-dialog/category-modal-dialog.component';
 import { PaymentModalDialogComponent } from '../../dialog/payment-modal-dialog/payment-modal-dialog.component';
-import { EMPTY_CATEGORY } from '../../models/category.model';
-import { EMPTY_PAYMENT } from '../../models/payment.model';
 
 @Component({
     selector: 'app-navigation',
