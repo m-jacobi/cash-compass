@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/tauri';
 import { from, Observable } from 'rxjs';
-import { PaymentModel } from 'src/app/core/models/payment.model';
-import { NOTIFICATION_TYPE } from 'src/app/enum/notification-type.enum';
-import { NotificationService } from 'src/app/services/notification.service';
+import { NOTIFICATION_TYPE } from '../../../../enum/notification-type.enum';
+import { NotificationService } from '../../../../services/notification.service';
+import { PaymentModel } from '../../../models/payment.model';
 
 
 

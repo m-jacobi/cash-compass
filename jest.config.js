@@ -1,6 +1,7 @@
 // jest.config.js
 module.exports = {
     preset: 'jest-preset-angular',
+    setupFiles: ['<rootDir>/src/__mocks__/tauri.mock.ts'],
     setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
     globalSetup: 'jest-preset-angular/global-setup',
     modulePathIgnorePatterns: ['<rootDir>/e2e/'],
