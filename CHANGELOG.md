@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2
+
+* Frontend architecture improved (introduction of facade, state, and presenter)
+* Removed some bugfixes
+
 ## 0.1.1
 
 * The German translation for the Material Paginator implemented
