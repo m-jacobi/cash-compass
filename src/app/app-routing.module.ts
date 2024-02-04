@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CategoryListComponent } from './components/category-list/category-list.component';
-import { PaymentListComponent } from './components/payment-list/payment-list.component';
+import { CategoryListComponent } from './feature-modules/category/components/category-list/category-list.component';
+import { PaymentListComponent } from './feature-modules/payment/components/payment-list/payment-list.component';
+
 
 const routes: Routes = [
     {

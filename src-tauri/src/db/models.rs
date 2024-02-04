@@ -29,7 +29,6 @@ pub struct UpdatePayment {
     pub last_modified_on: String
 }
 
-// TODO Category struct auslagern
 #[derive(Insertable, Queryable, Serialize, Debug, AsChangeset)]
 #[serde(rename_all = "camelCase")]
 #[diesel(table_name = categories)]

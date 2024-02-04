@@ -1,0 +1,27 @@
+.category-list__search-filter {
+    width: 500px;
+}
+
+.category-list__table {
+    position: relative;
+    min-height: 200px;
+    max-height: 700px;
+    overflow: auto;
+}
+
+.category-list__table-row:hover {
+    background: whitesmoke;
+}
+
+.mat-column-action {
+    text-align: left;
+}
+
+.no-data {
+    text-align: center;
+    font-size: large;
+}
+
+
+
+

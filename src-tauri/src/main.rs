@@ -68,8 +68,8 @@ fn delete_payment(id: String) {
 }
 
 #[tauri::command]
-fn get_categories() -> String{
-    db::get_categories()
+fn get_categories() -> Result<String, String> {
+    return db::get_categories()
 }
 
 #[tauri::command]
@@ -91,7 +91,6 @@ fn update_category(id: String, name: String, default_category: bool) {
         last_modified_on: create_utc_timestamp()
     };
     db::update_category(id, update_category);
-
 }
 
 #[tauri::command]
