@@ -89,9 +89,7 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.filterDateForm.valueChanges
             .pipe(takeUntil(this.ngDestroy))
             .subscribe((values: DateRange) => {
-                console.log('vor')
                 if(values.fromDate && values.toDate) {
-                    console.log('if', values)
                     this.filterDate(values)
                 }
             });
