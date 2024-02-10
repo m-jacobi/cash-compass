@@ -29,7 +29,6 @@ export class PaymentService {
                 notificationType: NOTIFICATION_TYPE.SUCCESS,
                 message: 'Die Buchung wurde erfolgreich angelegt',
                 buttonText: 'OK',
-
             });
         }).catch(() => {
             this.notificationService.showNotification({

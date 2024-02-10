@@ -1,6 +1,5 @@
-import { invoke } from '@tauri-apps/api';
-import { clearMocks, mockIPC } from "@tauri-apps/api/mocks";
-import { invokeMock } from '../../../../../__mocks__/tauri.mock';
+import { invoke } from "@tauri-apps/api";
+import { mockIPC } from "@tauri-apps/api/mocks";
 import { NotificationService } from '../../../../services/notification.service';
 import { PaymentModel } from '../../../models/payment.model';
 import { PaymentService } from './payment.service';
@@ -10,15 +9,10 @@ describe('PaymentService', () => {
 
     const notificationService: any = {
         showNotification: () => {}
-    } as unknown as NotificationService
+    } as unknown as NotificationService;
 
     beforeEach(() => {
         service = new PaymentService(notificationService);
-        invokeMock.mockReset();
-    });
-
-    afterEach(() => {
-        clearMocks()
     });
 
     it('should be created', () => {
@@ -47,26 +41,82 @@ describe('PaymentService', () => {
             }
         ];
 
-
         mockIPC((cmd) => {
             if (cmd === 'get_payments') {
               return;
             }
         });
 
-        invoke('get_payments');
-        expect(invoke).toHaveBeenCalledWith('get_payments');
+        const spy = jest.spyOn(window, '__TAURI_IPC__');
 
+        service.getPayments().subscribe((payments: PaymentModel[]) => {
+            invoke('get_payments');
+            expect(spy).toHaveBeenCalled();
+            expect(payments).toEqual(mockedPayments);
+        });
+    });
 
-        // expect(invoke('get_payments')).toEqual(mockedPayments);
+    it('should create a payment', () => {
+        const mockedPayment: PaymentModel = {
+            id: 'idNew1',
+            description: 'description1',
+            amount: 120,
+            paymentDate: '2023-04-12',
+            categoryId: 'categoryId1',
+            payee: 'payee1',
+            incomeOrExpense: false,
+        }
 
-        // invokeMock.mockResolvedValue(mockedPayments);
+        service.createPayment(mockedPayment);
 
-        // service.getPayments().subscribe((payments: PaymentModel[]) => {
-        //     expect(payments).toEqual(mockedPayments);
-        //     expect(invokeMock).toHaveBeenCalledWith('get_payments');
-        // });
+        mockIPC((cmd) => {
+            if (cmd === 'create_payment') {
+              return;
+            }
+        });
 
-        // expect(invoke('get_payments')).toEqual({ foo: 'bar' });
+        const spy = jest.spyOn(window, '__TAURI_IPC__');
+        invoke('create_payment');
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('should update a payment', () => {
+        const mockedPayment: PaymentModel = {
+            id: 'id1',
+            description: 'description1',
+            amount: 120,
+            paymentDate: '2023-04-12',
+            categoryId: 'categoryId1',
+            payee: 'payee1',
+            incomeOrExpense: false,
+        }
+
+        service.updatePayment(mockedPayment);
+
+        mockIPC((cmd) => {
+            if (cmd === 'update_payment') {
+              return;
+            }
+        });
+
+        const spy = jest.spyOn(window, '__TAURI_IPC__');
+        invoke('update_payment');
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('should delete a payment', () => {
+        const mockedPaymentId: string = 'id1';
+
+        service.deletePayment(mockedPaymentId);
+
+        mockIPC((cmd) => {
+            if (cmd === 'delete_payment') {
+              return;
+            }
+        });
+
+        const spy = jest.spyOn(window, '__TAURI_IPC__');
+        invoke('delete_payment');
+        expect(spy).toHaveBeenCalled();
     });
 });
