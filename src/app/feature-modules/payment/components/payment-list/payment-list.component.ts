@@ -71,13 +71,11 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public ngOnInit(): void {
-        this.paymentFacade.loadPayments();
-        this.categoryFacade.loadCategories();
         this.loadPayments();
     }
 
     private loadPayments(): void {
-        this.paymentListPresenter.payments$.pipe(takeUntil(this.ngDestroy)).subscribe((payments: PaymentListVM[]) => {
+        this.paymentListPresenter.paymentsVm$.pipe(takeUntil(this.ngDestroy)).subscribe((payments: PaymentListVM[]) => {
             this.payments = payments;
             this.totalIncomeCost = this.calculationService.getTotalIncomeCost(this.payments);
             this.totalExpenseCost = this.calculationService.getTotalExpenseCost(this.payments);

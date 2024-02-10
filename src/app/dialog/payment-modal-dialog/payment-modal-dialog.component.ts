@@ -37,7 +37,6 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
             }
         ]
 
-        this.categoryFacade.loadCategories();
         this.categoryFacade.categories$.pipe(takeUntil(this.ngDestroy))
         .subscribe((categories: CategoryModel[]) => {
             this.categories = categories;

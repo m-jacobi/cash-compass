@@ -10,15 +10,15 @@ import { PaymentListVM } from '../models/payment.vm';
 @Injectable({providedIn: 'root'})
 export class PaymentListPresenter {
 
-    public payments$: Observable<PaymentListVM[]>;
-    private paymentSource = new ReplaySubject<PaymentListVM[]>(1);
+    public paymentsVm$: Observable<PaymentListVM[]>;
+    private paymentsVmSource = new ReplaySubject<PaymentListVM[]>(1);
     private categoryDict: TDictionary<CategoryModel> = {};
 
     constructor(
         private paymentFacade: PaymentFacade,
         private categoryFacade: CategoryFacade
     ) {
-        this.payments$ = this.paymentSource.asObservable();
+        this.paymentsVm$ = this.paymentsVmSource.asObservable();
 
         combineLatest([
             this.paymentFacade.payments$,
@@ -32,7 +32,7 @@ export class PaymentListPresenter {
             ),
             map((payments: PaymentModel[]) => payments.map((payment: PaymentModel) => this.mapToVm(payment)))
         ).subscribe((payments: PaymentListVM[]) => {
-            this.paymentSource.next(payments)
+            this.paymentsVmSource.next(payments)
         });
     }
 

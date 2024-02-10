@@ -23,7 +23,6 @@ export class CategoryListPresenter {
             map((categories: CategoryModel[]) => categories.map((category: CategoryModel) => this.mapToVm(category)))
         ).subscribe((categories: CategoryListVM[]) => this.categorySource.next(this.sortCategoriesAsc(categories)));
 
-        this.paymentFacade.loadPayments();
         this.fetchCategoryIdsForPayments();
     }
 
