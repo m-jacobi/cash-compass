@@ -41,7 +41,6 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public ngOnInit(): void {
-        this.categoryFacade.loadCategories();
         this.categoryListPresenter.categories$.pipe(takeUntil(this.ngDestroy)).subscribe((categories: CategoryListVM[]) => {
             this.categoryDataSource.data = categories;
         });
