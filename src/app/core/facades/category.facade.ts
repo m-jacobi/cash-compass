@@ -1,25 +1,26 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, ReplaySubject } from "rxjs";
 
 import { CategoryService } from "../data-access/services/category/category.service";
 import { CategoryModel } from "../models/category.model";
-import { CategoryState } from "../states/category.state";
 
 @Injectable({ providedIn: 'root' })
 export class CategoryFacade {
 
     public categories$: Observable<CategoryModel[]>;
 
+    private categoriesSource =  new ReplaySubject<CategoryModel[]>(1)
+
     constructor(
         private categoryService: CategoryService,
-        private categoryState: CategoryState
     ) {
-        this.categories$ = this.categoryState.categories$;
+        this.categories$ = this.categoriesSource.asObservable();
+        this.loadCategories();
     }
 
-    public loadCategories(): void {
+    private loadCategories(): void {
         this.categoryService.getCategories().subscribe((categories: CategoryModel[]) => {
-            this.categoryState.setCategories(JSON.parse(categories.toString()));
+            this.categoriesSource.next(JSON.parse(categories.toString()));
         });
     }
 
