@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
-import { from, Observable } from 'rxjs';
+import { from, Observable, ReplaySubject } from 'rxjs';
 import { CategoryModel } from 'src/app/core/models/category.model';
 import { NOTIFICATION_TYPE } from '../../../../enum/notification-type.enum';
 import { NotificationService } from '../../../../services/notification.service';
@@ -8,10 +8,15 @@ import { NotificationService } from '../../../../services/notification.service';
 @Injectable({providedIn: 'root'})
 export class CategoryService {
 
+    private categoriesSource =  new ReplaySubject<CategoryModel[]>(1)
+
     constructor(private notificationService: NotificationService) {}
 
     public getCategories(): Observable<CategoryModel[]> {
-        return from(invoke<CategoryModel[]>('get_categories'));
+        from(invoke<CategoryModel[]>('get_categories')).subscribe((categories: CategoryModel[]) => {
+            this.categoriesSource.next(JSON.parse(categories.toString()))
+        });
+        return this.categoriesSource;
     }
 
     public createCategory(category: CategoryModel): void {

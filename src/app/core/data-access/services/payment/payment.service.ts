@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/tauri';
-import { from, Observable } from 'rxjs';
+import { from, Observable, ReplaySubject } from 'rxjs';
 import { NOTIFICATION_TYPE } from '../../../../enum/notification-type.enum';
 import { NotificationService } from '../../../../services/notification.service';
 import { PaymentModel } from '../../../models/payment.model';
@@ -10,10 +10,15 @@ import { PaymentModel } from '../../../models/payment.model';
 @Injectable({providedIn: 'root'})
 export class PaymentService {
 
+    private paymentsSource = new ReplaySubject<PaymentModel[]>(1);
+
     constructor(private notificationService: NotificationService) {}
 
     public getPayments(): Observable<PaymentModel[]> {
-        return from(invoke<PaymentModel[]>('get_payments'));
+        from(invoke<PaymentModel[]>('get_payments')).subscribe((payments: PaymentModel[]) => {
+            this.paymentsSource.next(JSON.parse(payments.toString()));
+        });
+        return this.paymentsSource;
     }
 
     public createPayment(payment: PaymentModel): void {

@@ -17,6 +17,7 @@ export class CategoryListPresenter {
         private categoryFacade: CategoryFacade,
         private paymentFacade: PaymentFacade
     ) {
+        this.categoryFacade.loadCategories();
         this.categories$ = this.categorySource.asObservable();
 
         this.categoryFacade.categories$.pipe(

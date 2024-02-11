@@ -18,6 +18,8 @@ export class PaymentListPresenter {
         private paymentFacade: PaymentFacade,
         private categoryFacade: CategoryFacade
     ) {
+        this.categoryFacade.loadCategories();
+        this.paymentFacade.loadPayments();
         this.paymentsVm$ = this.paymentsVmSource.asObservable();
 
         combineLatest([

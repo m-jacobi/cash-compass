@@ -15,12 +15,11 @@ export class CategoryFacade {
         private categoryService: CategoryService,
     ) {
         this.categories$ = this.categoriesSource.asObservable();
-        this.loadCategories();
     }
 
-    private loadCategories(): void {
+    public loadCategories(): void {
         this.categoryService.getCategories().subscribe((categories: CategoryModel[]) => {
-            this.categoriesSource.next(JSON.parse(categories.toString()));
+            this.categoriesSource.next(categories);
         });
     }
 

@@ -14,12 +14,11 @@ export class PaymentFacade {
         private paymentService: PaymentService,
     ) {
         this.payments$ = this.paymentsSource.asObservable();
-        this.loadPayments();
     }
 
-    private loadPayments(): void {
+    public loadPayments(): void {
         this.paymentService.getPayments().subscribe((payments: PaymentModel[]) => {
-            this.paymentsSource.next(JSON.parse(payments.toString()));
+            this.paymentsSource.next(payments);
         });
     }
 
