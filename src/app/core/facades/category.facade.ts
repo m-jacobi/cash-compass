@@ -14,6 +14,7 @@ export class CategoryFacade {
     constructor(
         private categoryService: CategoryService,
     ) {
+        this.loadCategories();
         this.categories$ = this.categoriesSource.asObservable();
     }
 

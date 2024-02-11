@@ -13,6 +13,7 @@ export class PaymentFacade {
     constructor(
         private paymentService: PaymentService,
     ) {
+        this.loadPayments();
         this.payments$ = this.paymentsSource.asObservable();
     }
 
