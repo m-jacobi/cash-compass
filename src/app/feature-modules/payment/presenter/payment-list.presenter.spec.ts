@@ -56,6 +56,15 @@ const mockedPayments: PaymentModel[] = [
         amount: 100,
         paymentDate: '2023-12-01',
         categoryId: 'id4',
+        payee: 'payee3',
+        incomeOrExpense: false
+    },
+    {
+        id: 'id4',
+        description: 'description4',
+        amount: 100,
+        paymentDate: '2023-12-01',
+        categoryId: '',
         payee: 'payee4',
         incomeOrExpense: false
     },
@@ -108,10 +117,20 @@ describe('PaymentListPresenter', () => {
                 description: 'description3',
                 amount: 100,
                 paymentDate: '2023-12-01',
-                payee: 'payee4',
+                payee: 'payee3',
                 incomeOrExpense: false,
                 categoryId: 'id4',
                 categoryName: 'dName'
+            },
+            {
+                id: 'id4',
+                description: 'description4',
+                amount: 100,
+                paymentDate: '2023-12-01',
+                payee: 'payee4',
+                incomeOrExpense: false,
+                categoryId: '',
+                categoryName: 'Zuweisung fehlt'
             }
         ];
 
