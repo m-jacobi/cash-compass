@@ -51,6 +51,4 @@ export class PaymentListPresenter {
             categoryName: category?.name ?? 'Zuweisung fehlt'
         }
     }
-
-
 }

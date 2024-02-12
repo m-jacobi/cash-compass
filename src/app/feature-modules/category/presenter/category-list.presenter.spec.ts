@@ -88,7 +88,7 @@ describe('CategoryListPresenter', () => {
                 defaultCategory: true,
                 isCategoryUsed: false
             }
-        ]
+        ];
         const sub = presenter.categoriesVM$.subscribe((categories: CategoryListVM[]) => {
             expect(categories).toEqual(expectedCategories);
             done();
