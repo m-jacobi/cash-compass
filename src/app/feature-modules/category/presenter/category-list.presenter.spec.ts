@@ -51,12 +51,12 @@ describe('CategoryListPresenter', () => {
     let presenter: CategoryListPresenter;
 
     const categoryFacade: any = {
-        categories$: of(),
+        categories$: of(mockedCategories),
         loadCategories: () => {}
     } as unknown as CategoryFacade;
 
     const paymentFacade: any = {
-        payments$: of(),
+        payments$: of(mockedPayments),
         loadPayments: () => {}
     } as unknown as PaymentFacade;
 
@@ -68,9 +68,32 @@ describe('CategoryListPresenter', () => {
         expect(presenter).toBeTruthy();
     });
 
-    it('should category view model', () => {
+    it('should category view model', (done) => {
+        const expectedCategories: CategoryListVM[] = [
+            {
+                id: 'id1',
+                name: 'aName',
+                defaultCategory: true,
+                isCategoryUsed: true
+            },
+            {
+                id: 'id2',
+                name: 'bName',
+                defaultCategory: true,
+                isCategoryUsed: true
+            },
+            {
+                id: 'id3',
+                name: 'cName',
+                defaultCategory: true,
+                isCategoryUsed: false
+            }
+        ]
         const sub = presenter.categoriesVM$.subscribe((categories: CategoryListVM[]) => {
-
+            expect(categories).toEqual(expectedCategories);
+            done();
         });
+
+        sub.unsubscribe();
     });
 });
