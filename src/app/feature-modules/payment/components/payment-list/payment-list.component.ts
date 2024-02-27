@@ -6,13 +6,12 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { compareAsc, format } from 'date-fns';
 import { Subject, takeUntil } from 'rxjs';
-import { CategoryFacade } from 'src/app/core/facades/category.facade';
-import { CalculationService } from 'src/app/services/calculation.service';
 import { PaymentFacade } from '../../../../core/facades/payment.facade';
-import { EMPTY_PAYMENT, PaymentModel } from '../../../../core/models/payment.model';
+import { EMPTY_PAYMENT } from '../../../../core/models/payment.model';
 import { PaymentModalDialogComponent } from '../../../../dialog/payment-modal-dialog/payment-modal-dialog.component';
 import { DateRange } from '../../../../models/date-range.model';
 import { PaymentIncomeOrExpense } from '../../../../models/payment-income-or-expense.model';
+import { CalculationService } from '../../../../services/calculation.service';
 import { PaymentListVM } from '../../models/payment.vm';
 import { PaymentListPresenter } from '../../presenter/payment-list.presenter';
 
@@ -38,7 +37,6 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
     constructor(
         private paymentFacade: PaymentFacade,
         private paymentListPresenter: PaymentListPresenter,
-        private categoryFacade: CategoryFacade,
         private dialog: MatDialog,
         private calculationService: CalculationService,
 
@@ -143,7 +141,7 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
-    public openEditPaymentDialog(payment: PaymentModel): void {
+    public openEditPaymentDialog(payment: PaymentListVM): void {
         this.dialog.open(PaymentModalDialogComponent, {
             data: payment
         });
