@@ -10,8 +10,15 @@ pub fn get_payments() -> String{
 }
 
 #[tauri::command]
-pub fn create_payment(description: String, amount: f32, payment_date: String, category_id: String, payee: String, income_or_expense: bool) {
-    let create_payment = PaymentDto {
+pub fn create_payment(
+    description: String,
+    amount: f32,
+    payment_date: String,
+    category_id: String,
+    payee: String,
+    income_or_expense: bool,
+) {
+    let create_payment: PaymentDto = PaymentDto {
         id: create_uuid(),
         description: description,
         amount: amount,
@@ -19,7 +26,11 @@ pub fn create_payment(description: String, amount: f32, payment_date: String, ca
         category_id: category_id,
         payee: payee,
         income_or_expense: income_or_expense,
-        last_modified_on: create_utc_timestamp()
+        last_modified_on: create_utc_timestamp(),
+        is_recurring: true,
+        start_date: "2024-03-21".to_string(),
+        end_date: "2029-08-28".to_string(),
+        interval: "WEEK".to_string()
     };
     println!("Message from Rust: {:?}", create_payment);
     create_payment_in_db(create_payment);

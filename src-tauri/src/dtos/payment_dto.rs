@@ -10,5 +10,9 @@ pub struct PaymentDto {
     pub category_id: String,
     pub payee: String,
     pub income_or_expense: bool,
-    pub last_modified_on: String
+    pub last_modified_on: String,
+    pub is_recurring: bool,
+    pub start_date: String,
+    pub end_date: String,
+    pub interval: String
 }

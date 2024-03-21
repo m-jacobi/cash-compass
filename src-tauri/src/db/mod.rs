@@ -3,9 +3,13 @@ use std::{path, env};
 
 use crate::schema::*;
 use crate::dtos::payment_dto::PaymentDto;
+use crate::helpers::uuid::create_uuid;
+use chrono::{Duration, NaiveDate};
 use diesel::prelude::*;
 use dotenvy::dotenv;
 use models::{Payment, UpdatePayment, Category, UpdateCategory};
+
+use self::payments::payment_date;
 
 pub fn db_connection() -> SqliteConnection {
     dotenv().ok();
@@ -45,24 +49,73 @@ pub fn get_payments_from_db() -> String {
 
 pub fn create_payment_in_db(payment_dto: PaymentDto) -> String {
     let connection = &mut db_connection();
-    let payment_model = Payment {
-        id: payment_dto.id,
-        description: payment_dto.description,
-        amount: payment_dto.amount,
-        payment_date: payment_dto.payment_date,
-        category_id: payment_dto.category_id,
-        payee: payment_dto.payee,
-        income_or_expense: payment_dto.income_or_expense,
-        last_modified_on: payment_dto.last_modified_on
+
+    let payment = Payment {
+        id: payment_dto.id.clone(),
+        description: payment_dto.description.clone(),
+        amount: payment_dto.amount.clone(),
+        payment_date: payment_dto.payment_date.clone(),
+        category_id: payment_dto.category_id.clone(),
+        payee: payment_dto.payee.clone(),
+        income_or_expense: payment_dto.income_or_expense.clone(),
+        last_modified_on: payment_dto.last_modified_on.clone(),
+        is_recurring: payment_dto.is_recurring.clone(),
+        recurring_id: None,
     };
 
     let create_payment = diesel::insert_into(payments::table)
-        .values(&payment_model)
-        .execute(connection)
-        .expect("Error saving new payment");
+    .values(&payment)
+    .execute(connection)
+    .expect("Error saving new payment");
+
+    println!("Message from Rust: {:?}", payment);
+
+    if payment_dto.is_recurring {
+        generate_and_insert_recurring_payments(&payment_dto, connection);
+    }
+
     let create_payment_json = serde_json::to_string(&create_payment).unwrap();
     create_payment_json
 }
+
+
+fn generate_and_insert_recurring_payments(payment_dto: &PaymentDto, connection: &mut SqliteConnection) {
+    let start_date = NaiveDate::parse_from_str(&payment_dto.start_date, "%Y-%m-%d").unwrap();
+
+    let mut current_date = start_date;
+
+    while current_date.to_string() <= payment_dto.end_date.to_string() {
+        // Generiere eine neue Buchung basierend auf den Daten der ursprünglichen Buchung
+        let recurring_payment = Payment {
+            id: create_uuid(),
+            description: payment_dto.description.clone(),
+            amount: payment_dto.amount.clone(),
+            payment_date: current_date.to_string(),
+            category_id: payment_dto.category_id.clone(),
+            payee: payment_dto.payee.clone(),
+            income_or_expense: payment_dto.income_or_expense.clone(),
+            last_modified_on: payment_dto.last_modified_on.clone(),
+            is_recurring: payment_dto.is_recurring.clone(),
+            recurring_id: Some(create_uuid()),
+        };
+
+        diesel::insert_into(payments::table)
+            .values(&recurring_payment)
+            .execute(connection)
+            .expect("Error saving new recurring payment");
+
+        current_date = calculate_next_payment_date(&current_date, &payment_dto.interval);
+    }
+}
+
+fn calculate_next_payment_date(current_date: &NaiveDate, interval: &str) -> NaiveDate {
+    match interval {
+        "DAY" => *current_date + Duration::days(1),
+        "WEEK" => *current_date + Duration::weeks(1),
+        _ => panic!("Interval {} not supported", interval),
+    }
+}
+
 
 pub fn update_payment_in_db(id: String, payment: UpdatePayment) -> String {
     let connection = &mut db_connection();
