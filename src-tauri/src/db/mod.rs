@@ -2,6 +2,7 @@ pub mod models;
 use std::{path, env};
 
 use crate::schema::*;
+use crate::dtos::payment_dto::PaymentDto;
 use diesel::prelude::*;
 use dotenvy::dotenv;
 use models::{Payment, UpdatePayment, Category, UpdateCategory};
@@ -33,7 +34,7 @@ pub fn db_connection() -> SqliteConnection {
 }
 
 
-pub fn get_payments() -> String {
+pub fn get_payments_from_db() -> String {
     let connection = &mut db_connection();
     let get_all_payments = payments::dsl::payments
         .load::<Payment>( connection)
@@ -42,18 +43,28 @@ pub fn get_payments() -> String {
     get_payments_json
 }
 
-pub fn create_payment(payment: Payment) -> String {
+pub fn create_payment_in_db(payment_dto: PaymentDto) -> String {
     let connection = &mut db_connection();
+    let payment_model = Payment {
+        id: payment_dto.id,
+        description: payment_dto.description,
+        amount: payment_dto.amount,
+        payment_date: payment_dto.payment_date,
+        category_id: payment_dto.category_id,
+        payee: payment_dto.payee,
+        income_or_expense: payment_dto.income_or_expense,
+        last_modified_on: payment_dto.last_modified_on
+    };
 
     let create_payment = diesel::insert_into(payments::table)
-        .values(&payment)
+        .values(&payment_model)
         .execute(connection)
         .expect("Error saving new payment");
     let create_payment_json = serde_json::to_string(&create_payment).unwrap();
     create_payment_json
 }
 
-pub fn update_payment(id: String, payment: UpdatePayment) -> String {
+pub fn update_payment_in_db(id: String, payment: UpdatePayment) -> String {
     let connection = &mut db_connection();
 
     let update_payment = diesel::update(payments::dsl::payments.find(id))
@@ -64,7 +75,7 @@ pub fn update_payment(id: String, payment: UpdatePayment) -> String {
     update_payment_json
 }
 
-pub fn delete_payment(id: String) {
+pub fn delete_payment_from_db(id: String) {
     let connection = &mut db_connection();
 
     diesel::delete(payments::dsl::payments)
@@ -73,7 +84,7 @@ pub fn delete_payment(id: String) {
     .expect("Error deleting payment");
 }
 
-pub fn get_categories() -> Result<String, String> {
+pub fn get_categories_from_db() -> Result<String, String> {
     let connection = &mut db_connection();
     let get_all_categories = categories::dsl::categories
         .load::<Category>( connection)
@@ -83,7 +94,7 @@ pub fn get_categories() -> Result<String, String> {
     Ok(get_categories_json)
 }
 
-pub fn create_category(category: Category) {
+pub fn create_category_in_db(category: Category) {
     let connection = &mut db_connection();
 
     diesel::insert_into(categories::table)
@@ -92,7 +103,7 @@ pub fn create_category(category: Category) {
         .expect("Error saving new categorie");
 }
 
-pub fn update_category(id: String, category: UpdateCategory) {
+pub fn update_category_in_db(id: String, category: UpdateCategory) {
     let connection = &mut db_connection();
 
     diesel::update(categories::dsl::categories.find(id))
@@ -101,7 +112,7 @@ pub fn update_category(id: String, category: UpdateCategory) {
         .expect("Error saving update category");
 }
 
-pub fn delete_category(id: String) {
+pub fn delete_category_from_db(id: String) {
     let connection = &mut db_connection();
 
     diesel::delete(categories::dsl::categories)
