@@ -76,13 +76,16 @@ export class PaymentService {
         });
     }
 
-    public deletePayment(paymentId: string): void {
+    public deletePayment(paymentId: string, isRecurring?: boolean, recurringId?: string): void {
         invoke('delete_payment', {
             id: paymentId,
+            isRecurring: isRecurring,
+            recurringId: recurringId
         }).then(() => {
+            const deleteMessage: string = isRecurring ? 'Alle dazugehörigen Buchungen wurden entfernt' : 'Die Buchung wurde erfolgreich entfernt'
             this.notificationService.showNotification({
                 notificationType: NOTIFICATION_TYPE.SUCCESS,
-                message: 'Die Buchung wurde erfolgreich entfernt',
+                message: deleteMessage,
                 buttonText: 'OK',
 
             });

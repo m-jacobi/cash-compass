@@ -36,7 +36,7 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
                 text: 'Einnahme'
             },
             {
-                value: true,
+                value: false,
                 text: 'Ausgabe',
             }
         ];
@@ -59,6 +59,8 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
                 text: 'Jahr'
             }
         ];
+
+        this.isRecurring = this.data.isRecurring;
 
         this.categoryFacade.categories$.pipe(takeUntil(this.ngDestroy))
         .subscribe((categories: CategoryModel[]) => {

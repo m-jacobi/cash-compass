@@ -95,7 +95,7 @@
                 <button
                     mat-icon-button color="warn"
                     matTooltip="Buchung entfernen"
-                    (click)="deletePayment(row.id)">
+                    (click)="deletePayment(row.id, row.isRecurring, row.recurringId)">
                         <mat-icon aria-label="Delete">delete</mat-icon>
                 </button>
             </td>

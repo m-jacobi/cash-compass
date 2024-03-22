@@ -33,8 +33,8 @@ export class PaymentFacade {
         this.loadPayments();
     }
 
-    public deletePayment(paymentId: string): void {
-        this.paymentService.deletePayment(paymentId);
+    public deletePayment(paymentId: string, isRecurring?: boolean, recurringId?: string): void {
+        this.paymentService.deletePayment(paymentId, isRecurring, recurringId);
         this.loadPayments();
     }
 }
