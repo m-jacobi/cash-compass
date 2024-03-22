@@ -22,6 +22,7 @@ export class PaymentService {
     }
 
     public createPayment(payment: PaymentModel): void {
+        console.log('payment', payment);
         invoke('create_payment', {
             description: payment.description,
             amount: payment.amount,

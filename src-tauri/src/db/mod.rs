@@ -96,7 +96,7 @@ fn generate_and_insert_recurring_payments(payment_dto: &PaymentDto, connection: 
             income_or_expense: payment_dto.income_or_expense.clone(),
             last_modified_on: payment_dto.last_modified_on.clone(),
             is_recurring: payment_dto.is_recurring.clone(),
-            recurring_id: Some(create_uuid()),
+            recurring_id: Some(payment_dto.id.clone()),
         };
 
         diesel::insert_into(payments::table)
