@@ -166,11 +166,11 @@ fn update_payment(id: String, update_payment_dto: &UpdatePaymentDto, connection:
 
 // }
 
-pub fn delete_payment_from_db(id: String, recurring_id: String, is_recuring: bool) {
+pub fn delete_payment_from_db(id: String, is_recurring: bool, recurring_id: String, ) {
     let connection = &mut db_connection();
 
-    if is_recuring {
-        println!("delete recurring payments")
+    if is_recurring && !recurring_id.is_empty() {
+        delete_recurring_payments(recurring_id, connection);
     } else {
         delete_payment(id, connection);
     }
@@ -179,6 +179,13 @@ pub fn delete_payment_from_db(id: String, recurring_id: String, is_recuring: boo
 fn delete_payment(id: String, connection: &mut SqliteConnection) {
     diesel::delete(payments::dsl::payments)
         .filter(payments::id.eq(id))
+        .execute(connection)
+        .expect("Error deleting payment");
+}
+
+fn delete_recurring_payments(recurring_id: String, connection: &mut SqliteConnection) {
+    diesel::delete(payments::dsl::payments)
+        .filter(payments::recurring_id.eq(recurring_id))
         .execute(connection)
         .expect("Error deleting payment");
 }

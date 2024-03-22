@@ -78,8 +78,8 @@ pub fn update_payment(
 #[tauri::command]
 pub fn delete_payment(
     id: String,
-    recurring_id: String,
-    is_recurring: bool
+    is_recurring: bool,
+    recurring_id: String
 ) {
-    delete_payment_from_db(id, recurring_id, is_recurring);
+    delete_payment_from_db(id, is_recurring, recurring_id);
 }
