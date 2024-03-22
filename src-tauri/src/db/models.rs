@@ -1,5 +1,4 @@
 use crate::schema::payments;
-use crate::schema::recurring_payments;
 use crate::schema::categories;
 use serde::{Serialize};
 
@@ -17,6 +16,8 @@ pub struct Payment {
     pub last_modified_on: String,
     pub is_recurring: bool,
     pub recurring_id: Option<String>,
+    pub end_date: Option<String>,
+    pub interval: Option<String>,
 }
 
 #[derive(Insertable, Serialize, Debug, Clone, AsChangeset)]
@@ -32,15 +33,8 @@ pub struct UpdatePayment {
     pub last_modified_on: String,
     pub is_recurring: bool,
     pub recurring_id: Option<String>,
-}
-
-#[derive(Insertable, Serialize, Debug, Clone, AsChangeset)]
-#[serde(rename_all = "camelCase")]
-#[diesel(table_name = recurring_payments)]
-pub struct RecurringPayment {
-    pub id: String,
-    pub end_date: String,
-    pub interval: String
+    pub end_date: Option<String>,
+    pub interval: Option<String>,
 }
 
 #[derive(Insertable, Queryable, Serialize, Debug, AsChangeset)]

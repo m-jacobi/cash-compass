@@ -12,8 +12,9 @@ pub struct PaymentDto {
     pub income_or_expense: bool,
     pub last_modified_on: String,
     pub is_recurring: bool,
-    pub end_date: String,
-    pub interval: String
+    pub recurring_id: Option<String>,
+    pub end_date:  Option<String>,
+    pub interval:  Option<String>
 }
 
 #[derive(Debug, Deserialize)]
@@ -26,8 +27,8 @@ pub struct UpdatePaymentDto {
     pub income_or_expense: bool,
     pub last_modified_on: String,
     pub is_recurring: bool,
-    pub recurring_id: String,
-    pub end_date: String,
-    pub interval: String
+    pub recurring_id: Option<String>,
+    pub end_date:  Option<String>,
+    pub interval:  Option<String>
 }
 

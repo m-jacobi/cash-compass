@@ -21,6 +21,12 @@ pub fn create_payment(
     end_date: String,
     interval: String
 ) {
+    let mut recurring_id: Option<String> = None;
+
+    if is_recurring {
+        recurring_id = Some(create_uuid());
+    }
+
     let create_payment: PaymentDto = PaymentDto {
         id: create_uuid(),
         description: description,
@@ -31,8 +37,9 @@ pub fn create_payment(
         income_or_expense: income_or_expense,
         last_modified_on: create_utc_timestamp(),
         is_recurring: is_recurring,
-        end_date: end_date,
-        interval: interval
+        recurring_id: recurring_id,
+        end_date: Some(end_date),
+        interval: Some(interval)
     };
     create_payment_in_db(create_payment);
 }
@@ -60,9 +67,9 @@ pub fn update_payment(
         income_or_expense: income_or_expense,
         last_modified_on: create_utc_timestamp(),
         is_recurring: is_recurring,
-        recurring_id: recurring_id,
-        end_date: end_date,
-        interval: interval
+        recurring_id: Some(recurring_id),
+        end_date: Some(end_date),
+        interval: Some(interval)
     };
     update_payment_in_db(id, update_payment);
 
