@@ -240,6 +240,7 @@ name = "cashcompass"
 version = "0.1.2"
 dependencies = [
  "chrono",
+ "chronoutil",
  "diesel",
  "diesel_migrations",
  "dotenvy",
@@ -314,6 +315,15 @@ dependencies = [
  "serde",
  "wasm-bindgen",
  "windows-targets 0.52.0",
+]
+
+[[package]]
+name = "chronoutil"
+version = "0.2.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "aa531c9c2b0e6168a6e4c5023cd38e8d5ab009d3a10459cd3e7baecd68fc3715"
+dependencies = [
+ "chrono",
 ]
 
 [[package]]

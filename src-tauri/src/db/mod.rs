@@ -1,15 +1,14 @@
 pub mod models;
-use std::{path, env};
+use std::{env, path};
 
 use crate::schema::*;
 use crate::dtos::payment_dto::PaymentDto;
 use crate::helpers::uuid::create_uuid;
 use chrono::{Duration, NaiveDate};
+use chronoutil::RelativeDuration;
 use diesel::prelude::*;
 use dotenvy::dotenv;
 use models::{Payment, UpdatePayment, Category, UpdateCategory};
-
-use self::payments::payment_date;
 
 pub fn db_connection() -> SqliteConnection {
     dotenv().ok();
@@ -47,9 +46,17 @@ pub fn get_payments_from_db() -> String {
     get_payments_json
 }
 
-pub fn create_payment_in_db(payment_dto: PaymentDto) -> String {
+pub fn create_payment_in_db(payment_dto: PaymentDto) {
     let connection = &mut db_connection();
 
+    if payment_dto.is_recurring {
+        generate_and_insert_recurring_payments(&payment_dto, connection);
+    } else {
+        generate_and_insert_payments(&payment_dto, connection);
+    }
+}
+
+fn generate_and_insert_payments(payment_dto: &PaymentDto, connection: &mut SqliteConnection) {
     let payment = Payment {
         id: payment_dto.id.clone(),
         description: payment_dto.description.clone(),
@@ -63,29 +70,18 @@ pub fn create_payment_in_db(payment_dto: PaymentDto) -> String {
         recurring_id: None,
     };
 
-    let create_payment = diesel::insert_into(payments::table)
-    .values(&payment)
-    .execute(connection)
-    .expect("Error saving new payment");
+    diesel::insert_into(payments::table)
+        .values(&payment)
+        .execute(connection)
+        .expect("Error saving new payment");
 
-    println!("Message from Rust: {:?}", payment);
-
-    if payment_dto.is_recurring {
-        generate_and_insert_recurring_payments(&payment_dto, connection);
-    }
-
-    let create_payment_json = serde_json::to_string(&create_payment).unwrap();
-    create_payment_json
 }
-
-
 fn generate_and_insert_recurring_payments(payment_dto: &PaymentDto, connection: &mut SqliteConnection) {
     let start_date = NaiveDate::parse_from_str(&payment_dto.start_date, "%Y-%m-%d").unwrap();
 
     let mut current_date = start_date;
 
     while current_date.to_string() <= payment_dto.end_date.to_string() {
-        // Generiere eine neue Buchung basierend auf den Daten der ursprünglichen Buchung
         let recurring_payment = Payment {
             id: create_uuid(),
             description: payment_dto.description.clone(),
@@ -110,8 +106,10 @@ fn generate_and_insert_recurring_payments(payment_dto: &PaymentDto, connection: 
 
 fn calculate_next_payment_date(current_date: &NaiveDate, interval: &str) -> NaiveDate {
     match interval {
-        "DAY" => *current_date + Duration::days(1),
-        "WEEK" => *current_date + Duration::weeks(1),
+        "DAY" => *current_date + RelativeDuration::days(1),
+        "WEEK" => *current_date + RelativeDuration::weeks(1),
+        "MONTH" => *current_date + RelativeDuration::months(1),
+        "YEAR" => *current_date + RelativeDuration::years(1),
         _ => panic!("Interval {} not supported", interval),
     }
 }

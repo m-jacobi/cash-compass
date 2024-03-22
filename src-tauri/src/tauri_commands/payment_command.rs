@@ -29,8 +29,8 @@ pub fn create_payment(
         last_modified_on: create_utc_timestamp(),
         is_recurring: true,
         start_date: "2024-03-21".to_string(),
-        end_date: "2024-08-28".to_string(),
-        interval: "WEEK".to_string()
+        end_date: "2029-03-21".to_string(),
+        interval: "YEAR".to_string()
     };
     println!("Message from Rust: {:?}", create_payment);
     create_payment_in_db(create_payment);

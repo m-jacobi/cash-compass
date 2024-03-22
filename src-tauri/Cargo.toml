@@ -21,6 +21,7 @@ diesel = { version = "2.1.4", features = ["sqlite", "uuid"] }
 diesel_migrations = { version = "2.1.0", features = ["sqlite"] }
 dotenvy = "0.15.7"
 chrono = "0.4.33"
+chronoutil = "0.2.6"
 
 [dependencies.uuid]
 version = "1.2.2"
