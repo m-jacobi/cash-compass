@@ -24,6 +24,7 @@ pub fn db_connection() -> SqliteConnection {
 
         }
         Err(_) => {
+            // TODO:
             let config_dir = &tauri::api::path::config_dir().unwrap();
             let app_dir = config_dir.join("cash-compass/data");
             std::fs::create_dir_all(&app_dir).unwrap();

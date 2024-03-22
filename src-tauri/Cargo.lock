@@ -236,22 +236,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cashcompass"
-version = "0.1.2"
-dependencies = [
- "chrono",
- "chronoutil",
- "diesel",
- "diesel_migrations",
- "dotenvy",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "uuid",
-]
-
-[[package]]
 name = "cc"
 version = "1.0.83"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -763,6 +747,22 @@ dependencies = [
  "libc",
  "redox_syscall",
  "windows-sys 0.52.0",
+]
+
+[[package]]
+name = "finanzfreund"
+version = "0.1.2"
+dependencies = [
+ "chrono",
+ "chronoutil",
+ "diesel",
+ "diesel_migrations",
+ "dotenvy",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "uuid",
 ]
 
 [[package]]

@@ -1,10 +1,10 @@
 [package]
-name = "cashcompass"
+name = "finanzfreund"
 version = "0.1.2"
 description = "A Finance Tool"
 authors = ["Matthias Jacobi"]
 license = "MIT"
-repository = "https://github.com/m-jacobi/cash-compass"
+repository = "https://github.com/m-jacobi/finanz-freund"
 edition = "2021"
 rust-version = "1.59"
 

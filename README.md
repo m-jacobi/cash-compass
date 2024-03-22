@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="./docs/cash-compass-logo.png" height="100" />
+  <img src="./docs/finanz-freund-logo.png" height="100" />
 </p>
 
-# Finanz Freund [![license](https://img.shields.io/github/license/DAVFoundation/captain-n3m0.svg?style=flat)](https://github.com/m-jacobi/cash-compass/blob/develop/LICENSE.md)
+# Finanz Freund [![license](https://img.shields.io/github/license/DAVFoundation/captain-n3m0.svg?style=flat)](https://github.com/m-jacobi/finanz-freund/blob/develop/LICENSE.md)
 
 Navigate your finances with ease using **Finanz Freund** - the smart and intuitive budget planner app!
 
@@ -44,9 +44,9 @@ You need to setup Rust and Tauri CLI by following the [tauri guide](https://taur
 ### Run Locally
 
 ```bash
-# 1. clone the repo and navigate to the <finanz freund> folder
+# 1. clone the repo and navigate to the finanz-freund folder
 git clone 
-cd cash-compass
+cd finanz-freund
 
 # 2. install dependencies
 yarn
