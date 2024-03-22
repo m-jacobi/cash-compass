@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { RECURRING_INTERVAL } from '../../enum/recurring-interval.enum';
 
 export interface PaymentModel {
     id: string;
@@ -8,6 +9,11 @@ export interface PaymentModel {
     categoryId: string;
     payee: string;
     incomeOrExpense: boolean;
+    isRecurring: boolean;
+    recurringId?: string;
+    startDate?:  string;
+    endDate?: string;
+    interval?: RECURRING_INTERVAL
 };
 
 export const EMPTY_PAYMENT: PaymentModel = {
@@ -18,5 +24,6 @@ export const EMPTY_PAYMENT: PaymentModel = {
     categoryId: '',
     payee: '',
     incomeOrExpense: false,
+    isRecurring: false
 };
 

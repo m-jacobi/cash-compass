@@ -10,7 +10,7 @@ import { PaymentFacade } from '../../../../core/facades/payment.facade';
 import { EMPTY_PAYMENT } from '../../../../core/models/payment.model';
 import { PaymentModalDialogComponent } from '../../../../dialog/payment-modal-dialog/payment-modal-dialog.component';
 import { DateRange } from '../../../../models/date-range.model';
-import { PaymentIncomeOrExpense } from '../../../../models/payment-income-or-expense.model';
+import { SelectItem } from '../../../../models/select-item.model';
 import { CalculationService } from '../../../../services/calculation.service';
 import { PaymentListVM } from '../../models/payment.vm';
 import { PaymentListPresenter } from '../../presenter/payment-list.presenter';
@@ -30,7 +30,7 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
     public filterDateForm: FormGroup;
     public totalIncomeCost: number = 0;
     public totalExpenseCost: number = 0;
-    public incomeOrExpenses: PaymentIncomeOrExpense[];
+    public incomeOrExpenses: SelectItem[];
     private payments: PaymentListVM[] = [];
     private readonly ngDestroy = new Subject<void>();
 
@@ -53,15 +53,15 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
         // TODO: global Array and push noFilter to the array
         this.incomeOrExpenses = [
             {
-                name: '---',
-                state: 'noFilter'
+                value: 'noFilter',
+                text: '---',
             },
             {
-                name: 'Einnahme',
-                state: true
+                value: true,
+                text: 'Einnahme'
             }, {
-                name: 'Ausgabe',
-                state: false,
+                value: false,
+                text: 'Ausgabe',
             }
         ];
 

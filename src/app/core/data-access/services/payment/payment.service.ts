@@ -30,6 +30,10 @@ export class PaymentService {
             categoryId: payment.categoryId,
             payee: payment.payee,
             incomeOrExpense: payment.incomeOrExpense,
+            isRecurring: payment.isRecurring,
+            startDate: payment.startDate,
+            endDate: payment.endDate,
+            interval: payment.interval
         }).then(() => {
             this.notificationService.showNotification({
                 notificationType: NOTIFICATION_TYPE.SUCCESS,

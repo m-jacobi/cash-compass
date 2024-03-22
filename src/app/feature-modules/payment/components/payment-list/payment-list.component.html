@@ -9,8 +9,8 @@
             <mat-select (selectionChange)="filterByIncomeOrExpense($event)"
                 placeholder="Einnahme / Ausgabe"
                 matTooltip="Nach Einnahmen oder Ausgaben filtern">
-                <mat-option *ngFor="let incomeOrExpense of incomeOrExpenses" [value]="incomeOrExpense.state">
-                    {{ incomeOrExpense.name }}
+                <mat-option *ngFor="let incomeOrExpense of incomeOrExpenses" [value]="incomeOrExpense.value">
+                    {{ incomeOrExpense.text }}
                     </mat-option>
             </mat-select>
         </mat-form-field>

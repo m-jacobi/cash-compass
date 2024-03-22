@@ -27,7 +27,6 @@ diesel::table! {
 diesel::table! {
     recurring_payments (id) {
         id -> Text,
-        start_date -> Text,
         end_date -> Nullable<Text>,
         interval -> Text,
     }

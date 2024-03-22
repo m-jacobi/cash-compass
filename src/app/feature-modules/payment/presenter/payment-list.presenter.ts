@@ -48,7 +48,12 @@ export class PaymentListPresenter {
             payee: payment.payee,
             incomeOrExpense: payment.incomeOrExpense,
             categoryId: payment.categoryId,
-            categoryName: category?.name ?? 'Zuweisung fehlt'
+            categoryName: category?.name ?? 'Zuweisung fehlt',
+            isRecurring: payment.isRecurring,
+            recurringId: payment.recurringId,
+            startDate:  payment.startDate,
+            endDate: payment.endDate,
+            interval: payment.interval
         }
     }
 }
