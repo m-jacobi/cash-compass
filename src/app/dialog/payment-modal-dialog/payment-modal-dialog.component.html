@@ -62,7 +62,10 @@
                 <mat-datepicker-toggle matSuffix [for]="paymentDate"></mat-datepicker-toggle>
                 <mat-datepicker #paymentDate></mat-datepicker>
             </mat-form-field>
-            <mat-slide-toggle formControlName="isRecurring"  [(ngModel)]="isRecurring">Wiederkehrende Buchung?</mat-slide-toggle>
+            <mat-slide-toggle
+                formControlName="isRecurring"
+                [(ngModel)]="isRecurring">Wiederkehrende Buchung?
+            </mat-slide-toggle>
         </div>
         <ng-container *ngIf="isRecurring">
             <mat-form-field class="payment-form__end-date" appearance="fill">

@@ -81,6 +81,7 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.isRecurring = this.data.isRecurring;
+        this.disableRecurringPaymentToggle(this.data.id ?? '');
      }
 
     public get formControl() {
@@ -121,6 +122,12 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
         this.ngDestroy.unsubscribe();
     }
 
+    private disableRecurringPaymentToggle(paymentId: string): void {
+        if(paymentId.length > 0) {
+            this.paymentForm.get('isRecurring')?.disable();
+        }
+    }
+
     private fillPaymentUpdateData(payment: Partial<PaymentModel>): Partial<PaymentModel> {
         const paymentData: Partial<PaymentModel> = {
             ...payment,
@@ -145,7 +152,6 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
                 recurringStartDate: payment.paymentDate
             }
         }
-
         return paymentData;
     }
 }
