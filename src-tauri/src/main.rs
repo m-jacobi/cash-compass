@@ -31,6 +31,7 @@ fn main() {
         create_payment,
         update_payment,
         delete_payment,
+        delete_recurring_payments,
         get_categories,
         create_category,
         update_category,

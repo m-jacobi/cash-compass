@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { RECURRING_INTERVAL } from '../../enum/recurring-interval.enum';
 
 export interface PaymentModel {
-    id: string;
+    id?: string;
     description: string;
     amount: number;
     paymentDate: string;
@@ -11,7 +11,6 @@ export interface PaymentModel {
     incomeOrExpense: boolean;
     isRecurring: boolean;
     recurringId?: string;
-    startDate?:  string;
     endDate?: string;
     interval?: RECURRING_INTERVAL
 };

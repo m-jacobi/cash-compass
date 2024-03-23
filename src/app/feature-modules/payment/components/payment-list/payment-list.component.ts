@@ -142,13 +142,16 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public openEditPaymentDialog(payment: PaymentListVM): void {
-        console.log('payment', payment);
         this.dialog.open(PaymentModalDialogComponent, {
             data: payment
         });
     }
 
-    public deletePayment(paymentId: string, isRecurring?: boolean, recurringId?: string): void {
-        this.paymentFacade.deletePayment(paymentId, isRecurring, recurringId);
+    public deletePayment(paymentId: string, isRecurring: boolean, recurringId: string): void {
+        if(!isRecurring) {
+            this.paymentFacade.deletePayment(paymentId, isRecurring);
+        } else {
+            this.paymentFacade.deleteRecurringPayments(recurringId, isRecurring);
+        }
     }
 }

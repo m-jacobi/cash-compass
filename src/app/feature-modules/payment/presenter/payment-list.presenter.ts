@@ -51,7 +51,6 @@ export class PaymentListPresenter {
             categoryName: category?.name ?? 'Zuweisung fehlt',
             isRecurring: payment.isRecurring,
             recurringId: payment.recurringId,
-            startDate:  payment.startDate,
             endDate: payment.endDate,
             interval: payment.interval
         }

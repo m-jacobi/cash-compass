@@ -41,6 +41,7 @@ pub fn create_payment(
         end_date: Some(end_date),
         interval: Some(interval)
     };
+    println!("tauri create payment {:?}", create_payment);
     create_payment_in_db(create_payment);
 }
 
@@ -79,7 +80,17 @@ pub fn update_payment(
 pub fn delete_payment(
     id: String,
     is_recurring: bool,
-    recurring_id: String
 ) {
-    delete_payment_from_db(id, is_recurring, recurring_id);
+    println!("delete_payment");
+    delete_payment_from_db(id, is_recurring);
 }
+
+#[tauri::command]
+pub fn delete_recurring_payments(
+    recurring_id: String,
+    is_recurring: bool,
+) {
+    println!("delete_payment");
+    delete_recurring_payments_from_db(recurring_id, is_recurring);
+}
+

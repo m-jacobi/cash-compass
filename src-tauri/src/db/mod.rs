@@ -83,9 +83,7 @@ fn generate_and_insert_payments(payment_dto: &PaymentDto, connection: &mut Sqlit
 }
 
 fn generate_and_insert_recurring_payments(payment_dto: &PaymentDto, connection: &mut SqliteConnection) {
-    let start_date = NaiveDate::parse_from_str(&payment_dto.payment_date, "%Y-%m-%d").unwrap();
-
-    let mut current_date = start_date;
+    let mut current_date = NaiveDate::parse_from_str(&payment_dto.payment_date, "%Y-%m-%d").unwrap();
 
     if payment_dto.end_date != None {
         while match payment_dto.end_date  {
@@ -167,28 +165,25 @@ fn update_payment(id: String, update_payment_dto: &UpdatePaymentDto, connection:
 
 // }
 
-pub fn delete_payment_from_db(id: String, is_recurring: bool, recurring_id: String, ) {
+
+pub fn delete_payment_from_db(id: String, is_recurring: bool) {
     let connection = &mut db_connection();
-
-    if is_recurring && !recurring_id.is_empty() {
-        delete_recurring_payments(recurring_id, connection);
-    } else {
-        delete_payment(id, connection);
-    }
-}
-
-fn delete_payment(id: String, connection: &mut SqliteConnection) {
-    diesel::delete(payments::dsl::payments)
+    if(!is_recurring) {
+        diesel::delete(payments::dsl::payments)
         .filter(payments::id.eq(id))
         .execute(connection)
         .expect("Error deleting payment");
+    }
 }
 
-fn delete_recurring_payments(recurring_id: String, connection: &mut SqliteConnection) {
-    diesel::delete(payments::dsl::payments)
+pub fn delete_recurring_payments_from_db(recurring_id: String, is_recurring: bool) {
+    let connection = &mut db_connection();
+    if(is_recurring) {
+        diesel::delete(payments::dsl::payments)
         .filter(payments::recurring_id.eq(recurring_id))
         .execute(connection)
         .expect("Error deleting payment");
+    }
 }
 
 pub fn get_categories_from_db() -> Result<String, String> {

@@ -23,18 +23,23 @@ export class PaymentFacade {
         });
     }
 
-    public createPayment(payment: PaymentModel): void {
+    public createPayment(payment: Partial<PaymentModel>): void {
         this.paymentService.createPayment(payment);
         this.loadPayments();
     }
 
-    public updatePayment(payment: PaymentModel): void {
+    public updatePayment(payment: Partial<PaymentModel>): void {
         this.paymentService.updatePayment(payment);
         this.loadPayments();
     }
 
-    public deletePayment(paymentId: string, isRecurring?: boolean, recurringId?: string): void {
-        this.paymentService.deletePayment(paymentId, isRecurring, recurringId);
+    public deletePayment(paymentId: string, isRecurring: boolean): void {
+        this.paymentService.deletePayment(paymentId, isRecurring);
+        this.loadPayments();
+    }
+
+    public deleteRecurringPayments(recurringId: string, isRecurring: boolean): void {
+        this.paymentService.deleteRecurringPayments(recurringId, isRecurring);
         this.loadPayments();
     }
 }

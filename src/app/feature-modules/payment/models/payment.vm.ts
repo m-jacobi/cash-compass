@@ -1,6 +1,6 @@
 import { RECURRING_INTERVAL } from '../../../enum/recurring-interval.enum';
 export interface PaymentListVM {
-    id: string;
+    id?: string;
     description: string;
     amount: number;
     paymentDate: string;
@@ -10,7 +10,6 @@ export interface PaymentListVM {
     categoryName: string;
     isRecurring: boolean;
     recurringId?: string;
-    startDate?:  string;
     endDate?: string;
     interval?: RECURRING_INTERVAL
 }

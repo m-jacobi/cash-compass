@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { formatISO, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import { Subject, takeUntil } from 'rxjs';
 import { RECURRING_INTERVAL } from 'src/app/enum/recurring-interval.enum';
 import { CategoryFacade } from '../../core/facades/category.facade';
@@ -60,7 +60,6 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
             }
         ];
 
-        this.isRecurring = this.data.isRecurring;
 
         this.categoryFacade.categories$.pipe(takeUntil(this.ngDestroy))
         .subscribe((categories: CategoryModel[]) => {
@@ -70,41 +69,41 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
         this.paymentForm = new FormGroup({
             description: new FormControl<string>(this.data.description),
             amount: new FormControl<number>(this.data.amount, [Validators.required]),
-            paymentDate: new FormControl<Date>(parseISO(this.data.paymentDate), [Validators.required]),
+            paymentDate: new FormControl<string>(this.data.paymentDate ? format(new Date(this.data.paymentDate), 'yyyy-MM-dd') : ''),
             category: new FormControl<string>(this.data.categoryId, [Validators.required]),
             payee: new FormControl<string>(this.data.payee),
             incomeOrExpense: new FormControl<boolean>(this.data.incomeOrExpense, [Validators.required]),
             isRecurring: new FormControl<boolean>(this.data.isRecurring, [Validators.required]),
-            startDate: new FormControl<Date>(parseISO(this.data.paymentDate)),
-            endDate: new FormControl<Date>(parseISO(this.data.endDate ?? '')),
+            endDate: new FormControl<string>(this.data.endDate ? format(new Date(this.data.endDate), 'yyyy-MM-dd') : ''),
             interval: new FormControl<RECURRING_INTERVAL | string>(this.data.interval ?? '')
         });
     }
 
-    public ngOnInit(): void { }
+    public ngOnInit(): void {
+        this.isRecurring = this.data.isRecurring;
+     }
 
     public get formControl() {
         return this.paymentForm.controls;
     }
 
     public savePayment(): void {
-        const payment: PaymentModel = {
-            id: this.data.id,
+        const payment: Partial<PaymentModel> = {
             description: this.formControl['description'].value,
             amount: this.formControl['amount'].value,
-            paymentDate: formatISO(this.formControl['paymentDate'].value, {representation: 'date'}),
+            paymentDate: format(new Date(this.formControl['paymentDate'].value), 'yyyy-MM-dd'),
             categoryId: this.formControl['category'].value,
             payee: this.formControl['payee'].value,
             incomeOrExpense: this.formControl['incomeOrExpense'].value,
             isRecurring: this.formControl['isRecurring'].value,
-            startDate: formatISO(this.formControl['paymentDate'].value, {representation: 'date'}),
-            endDate: formatISO(this.formControl['endDate'].value, {representation: 'date'}),
+            endDate: this.formControl['endDate'].value ? format(new Date(this.formControl['endDate'].value), 'yyyy-MM-dd') : '',
             interval: this.formControl['interval'].value,
         }
 
         if(this.data.id){
             this.paymentFacade.updatePayment(payment);
         } else {
+            console.log('create payment', payment);
             this.paymentFacade.createPayment(payment);
         }
         this.onClose();
@@ -118,4 +117,6 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
         this.ngDestroy.next();
         this.ngDestroy.unsubscribe();
     }
+
+    // private fillPayment(): payment
 }

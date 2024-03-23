@@ -1,18 +1,13 @@
 import { invoke } from "@tauri-apps/api";
 import { mockIPC } from "@tauri-apps/api/mocks";
-import { NotificationService } from '../../../../services/notification.service';
 import { PaymentModel } from '../../../models/payment.model';
 import { PaymentService } from './payment.service';
 
 describe('PaymentService', () => {
     let service: PaymentService;
 
-    const notificationService: any = {
-        showNotification: () => {}
-    } as unknown as NotificationService;
-
     beforeEach(() => {
-        service = new PaymentService(notificationService);
+        service = new PaymentService();
     });
 
     it('should be created', () => {
