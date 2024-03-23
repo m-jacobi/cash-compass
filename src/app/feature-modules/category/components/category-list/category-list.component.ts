@@ -41,7 +41,7 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public ngOnInit(): void {
-        this.categoryListPresenter.categories$.pipe(takeUntil(this.ngDestroy)).subscribe((categories: CategoryListVM[]) => {
+        this.categoryListPresenter.categoriesVM$.pipe(takeUntil(this.ngDestroy)).subscribe((categories: CategoryListVM[]) => {
             this.categoryDataSource.data = categories;
         });
     }
@@ -69,13 +69,13 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public openCreateCategoryDialog(): void {
-        const createDialogRef = this.dialog.open(CategoryModalDialogComponent, {
+        this.dialog.open(CategoryModalDialogComponent, {
             data: EMPTY_CATEGORY
         });
     }
 
     public openEditCategoryDialog(category: CategoryModel): void {
-        const editDialogRef = this.dialog.open(CategoryModalDialogComponent, {
+        this.dialog.open(CategoryModalDialogComponent, {
             data: category
         });
     }

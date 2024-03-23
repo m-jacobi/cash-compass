@@ -1,5 +1,5 @@
 {
-  "name": "cashcompass",
+  "name": "finanzfreund",
   "type": "commonjs",
   "version": "0.1.2",
   "scripts": {
@@ -8,8 +8,9 @@
     "dev": "ng serve --port 1420",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "jest --silent",
-    "test:watch": "jest --watch"
+    "test": "npx jest --silent",
+    "test:watch": "npx jest --silent --watch",
+    "test:ci": "npx jest --silent --no-colors --runInBand"
   },
   "private": true,
   "dependencies": {

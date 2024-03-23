@@ -22,6 +22,12 @@
                 <input matInput formControlName="description" placeholder="Beschreibung">
             </mat-form-field>
         </div>
+        <div>
+            <mat-form-field class="payment-form__payee" appearance="fill">
+                <mat-label>Zahlungsempfänger</mat-label>
+                <input  matInput formControlName="payee" placeholder="Zahlungsempfänger">
+            </mat-form-field>
+        </div>
 
         <div>
             <mat-form-field class="payment-form__amount" appearance="fill" floatLabel="always">
@@ -31,7 +37,22 @@
                     <label *ngIf="formControl['amount'].errors && formControl['amount'].errors['required']">Dies ist ein Pflichtfeld.</label>
                 </mat-error>
             </mat-form-field>
-            <mat-form-field class="payment-form__date" appearance="fill">
+            <mat-form-field *ngIf="categories" class="payment-form__income-or-expense" appearance="fill">
+                <mat-label>Einnahme/Ausagbe</mat-label>
+                <mat-select
+                    formControlName="incomeOrExpense"
+                    placeholder="Einnahme/Ausagbe">
+                    <mat-option *ngFor="let incomeOrExpense of incomeOrExpenses" [value]="incomeOrExpense.value">
+                        {{ incomeOrExpense.text }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formControl['incomeOrExpense'].invalid && formControl['incomeOrExpense'].touched">
+                    <label *ngIf="formControl['incomeOrExpense'].errors && formControl['incomeOrExpense'].errors['required']">Dies ist ein Pflichtfeld.</label>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="payment-form__payment-date" appearance="fill">
                 <mat-label>Buchungsdatum</mat-label>
                 <input
                     autocomplete="off"
@@ -41,26 +62,32 @@
                 <mat-datepicker-toggle matSuffix [for]="paymentDate"></mat-datepicker-toggle>
                 <mat-datepicker #paymentDate></mat-datepicker>
             </mat-form-field>
+            <mat-slide-toggle
+                formControlName="isRecurring"
+                [(ngModel)]="isRecurring">Wiederkehrende Buchung?
+            </mat-slide-toggle>
         </div>
-        <div>
-            <mat-form-field class="payment-form__payee" appearance="fill">
-                <mat-label>Zahlungsempfänger</mat-label>
-                <input  matInput formControlName="payee" placeholder="Zahlungsempfänger">
+        <ng-container *ngIf="isRecurring">
+            <mat-form-field class="payment-form__end-date" appearance="fill">
+                <mat-label>Enddatum</mat-label>
+                <input
+                    autocomplete="off"
+                    matInput
+                    formControlName="recurringEndDate"
+                    [matDatepicker]="recurringEndDate">
+                <mat-datepicker-toggle matSuffix [for]="recurringEndDate"></mat-datepicker-toggle>
+                <mat-datepicker #recurringEndDate></mat-datepicker>
             </mat-form-field>
-            <mat-form-field class="payment-form__income-or-expense" appearance="fill" *ngIf="categories">
-                <mat-label>Einnahme/Ausagbe</mat-label>
-                <mat-select
-                    formControlName="incomeOrExpense"
-                    placeholder="Einnahme/Ausagbe">
-                    <mat-option *ngFor="let incomeOrExpense of incomeOrExpenses" [value]="incomeOrExpense.state">
-                        {{ incomeOrExpense.name }}
+            <mat-form-field *ngIf="categories" class="payment-form__income-or-expense" appearance="fill">
+                <mat-label>Wiederholen</mat-label>
+                <mat-select formControlName="recurringInterval">
+                    <mat-option
+                        *ngFor="let recurringInterval of recurringIntervals" [value]="recurringInterval.value">
+                        {{ recurringInterval.text }}
                     </mat-option>
                 </mat-select>
-                <mat-error *ngIf="formControl['incomeOrExpense'].invalid && formControl['incomeOrExpense'].touched">
-                    <label *ngIf="formControl['incomeOrExpense'].errors && formControl['incomeOrExpense'].errors['required']">Dies ist ein Pflichtfeld.</label>
-                </mat-error>
             </mat-form-field>
-        </div>
+        </ng-container>
     </div>
 
     <div mat-dialog-actions class="payment-dialog__buttons">

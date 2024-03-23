@@ -1,10 +1,10 @@
 [package]
-name = "cashcompass"
+name = "finanzfreund"
 version = "0.1.2"
 description = "A Finance Tool"
 authors = ["Matthias Jacobi"]
 license = "MIT"
-repository = "https://github.com/m-jacobi/cash-compass"
+repository = "https://github.com/m-jacobi/finanz-freund"
 edition = "2021"
 rust-version = "1.59"
 
@@ -21,6 +21,7 @@ diesel = { version = "2.1.4", features = ["sqlite", "uuid"] }
 diesel_migrations = { version = "2.1.0", features = ["sqlite"] }
 dotenvy = "0.15.7"
 chrono = "0.4.33"
+chronoutil = "0.2.6"
 
 [dependencies.uuid]
 version = "1.2.2"

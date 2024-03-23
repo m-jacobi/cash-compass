@@ -19,6 +19,11 @@ diesel::table! {
         payee -> Text,
         income_or_expense -> Bool,
         last_modified_on -> Text,
+        is_recurring -> Bool,
+        recurring_id -> Nullable<Text>,
+        recurring_start_date -> Nullable<Text>,
+        recurring_end_date -> Nullable<Text>,
+        recurring_interval -> Nullable<Text>,
     }
 }
 

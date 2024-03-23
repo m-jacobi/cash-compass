@@ -6,13 +6,12 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { compareAsc, format } from 'date-fns';
 import { Subject, takeUntil } from 'rxjs';
-import { CategoryFacade } from 'src/app/core/facades/category.facade';
-import { CalculationService } from 'src/app/services/calculation.service';
 import { PaymentFacade } from '../../../../core/facades/payment.facade';
-import { EMPTY_PAYMENT, PaymentModel } from '../../../../core/models/payment.model';
+import { EMPTY_PAYMENT } from '../../../../core/models/payment.model';
 import { PaymentModalDialogComponent } from '../../../../dialog/payment-modal-dialog/payment-modal-dialog.component';
 import { DateRange } from '../../../../models/date-range.model';
-import { PaymentIncomeOrExpense } from '../../../../models/payment-income-or-expense.model';
+import { SelectItem } from '../../../../models/select-item.model';
+import { CalculationService } from '../../../../services/calculation.service';
 import { PaymentListVM } from '../../models/payment.vm';
 import { PaymentListPresenter } from '../../presenter/payment-list.presenter';
 
@@ -31,14 +30,13 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
     public filterDateForm: FormGroup;
     public totalIncomeCost: number = 0;
     public totalExpenseCost: number = 0;
-    public incomeOrExpenses: PaymentIncomeOrExpense[];
+    public incomeOrExpenses: SelectItem[];
     private payments: PaymentListVM[] = [];
     private readonly ngDestroy = new Subject<void>();
 
     constructor(
         private paymentFacade: PaymentFacade,
         private paymentListPresenter: PaymentListPresenter,
-        private categoryFacade: CategoryFacade,
         private dialog: MatDialog,
         private calculationService: CalculationService,
 
@@ -55,15 +53,15 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
         // TODO: global Array and push noFilter to the array
         this.incomeOrExpenses = [
             {
-                name: '---',
-                state: 'noFilter'
+                value: 'noFilter',
+                text: '---',
             },
             {
-                name: 'Einnahme',
-                state: true
+                value: true,
+                text: 'Einnahme'
             }, {
-                name: 'Ausgabe',
-                state: false,
+                value: false,
+                text: 'Ausgabe',
             }
         ];
 
@@ -143,13 +141,17 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
-    public openEditPaymentDialog(payment: PaymentModel): void {
+    public openEditPaymentDialog(payment: PaymentListVM): void {
         this.dialog.open(PaymentModalDialogComponent, {
             data: payment
         });
     }
 
-    public deletePayment(paymentId: string): void {
-        this.paymentFacade.deletePayment(paymentId);
+    public deletePayment(paymentId: string, isRecurring: boolean, recurringId: string): void {
+        if(!isRecurring) {
+            this.paymentFacade.deletePayment(paymentId, isRecurring);
+        } else {
+            this.paymentFacade.deleteRecurringPayments(recurringId, isRecurring);
+        }
     }
 }

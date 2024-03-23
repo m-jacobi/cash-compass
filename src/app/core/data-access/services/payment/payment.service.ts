@@ -1,22 +1,25 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/tauri';
-import { from, Observable } from 'rxjs';
-import { PaymentModel } from 'src/app/core/models/payment.model';
-import { NOTIFICATION_TYPE } from 'src/app/enum/notification-type.enum';
-import { NotificationService } from 'src/app/services/notification.service';
+import { from, Observable, ReplaySubject } from 'rxjs';
+import { PaymentModel } from '../../../models/payment.model';
 
 
 
 @Injectable({providedIn: 'root'})
 export class PaymentService {
 
-    constructor(private notificationService: NotificationService) {}
+    private paymentsSource = new ReplaySubject<PaymentModel[]>(1);
+
+    constructor() {}
 
     public getPayments(): Observable<PaymentModel[]> {
-        return from(invoke<PaymentModel[]>('get_payments'));
+        from(invoke<PaymentModel[]>('get_payments')).subscribe((payments: PaymentModel[]) => {
+            this.paymentsSource.next(JSON.parse(payments.toString()));
+        });
+        return this.paymentsSource;
     }
 
-    public createPayment(payment: PaymentModel): void {
+    public createPayment(payment: Partial<PaymentModel>): void {
         invoke('create_payment', {
             description: payment.description,
             amount: payment.amount,
@@ -24,24 +27,14 @@ export class PaymentService {
             categoryId: payment.categoryId,
             payee: payment.payee,
             incomeOrExpense: payment.incomeOrExpense,
-        }).then(() => {
-            this.notificationService.showNotification({
-                notificationType: NOTIFICATION_TYPE.SUCCESS,
-                message: 'Die Buchung wurde erfolgreich angelegt',
-                buttonText: 'OK',
-
-            });
-        }).catch(() => {
-            this.notificationService.showNotification({
-                notificationType: NOTIFICATION_TYPE.ERROR,
-                message: 'Die Buchung konnt nicht angelegt werden',
-                buttonText: 'OK',
-
-            });
+            isRecurring: payment.isRecurring,
+            recurringStartDate: payment.recurringStartDate,
+            recurringEndDate: payment.recurringEndDate,
+            recurringInterval: payment.recurringInterval
         });
     }
 
-    public updatePayment(payment: PaymentModel): void {
+    public updatePayment(payment: Partial<PaymentModel>): void {
         invoke('update_payment', {
             id: payment.id,
             description: payment.description,
@@ -50,40 +43,38 @@ export class PaymentService {
             categoryId: payment.categoryId,
             payee: payment.payee,
             incomeOrExpense: payment.incomeOrExpense,
-        }).then(() => {
-            this.notificationService.showNotification({
-                notificationType: NOTIFICATION_TYPE.SUCCESS,
-                message: 'Die Buchung wurde aktualisiert',
-                buttonText: 'OK',
-
-            });
-        }).catch(() => {
-            this.notificationService.showNotification({
-                notificationType: NOTIFICATION_TYPE.ERROR,
-                message: 'Die Buchung konnt nicht aktualisiert werden',
-                buttonText: 'OK',
-
-            });
+            isRecurring: payment.isRecurring,
         });
     }
 
-    public deletePayment(paymentId: string): void {
+    public updateRecurringPayment(payment: Partial<PaymentModel>): void {
+        invoke('update_recurring_payment', {
+            id: payment.id,
+            description: payment.description,
+            amount: payment.amount,
+            paymentDate: payment.paymentDate,
+            categoryId: payment.categoryId,
+            payee: payment.payee,
+            incomeOrExpense: payment.incomeOrExpense,
+            isRecurring: payment.isRecurring,
+            recurringId: payment.recurringId,
+            recurringStartDate: payment.recurringStartDate,
+            recurringEndDate: payment.recurringEndDate,
+            recurringInterval: payment.recurringInterval
+        });
+    }
+
+    public deletePayment(paymentId: string, isRecurring: boolean): void {
         invoke('delete_payment', {
             id: paymentId,
-        }).then(() => {
-            this.notificationService.showNotification({
-                notificationType: NOTIFICATION_TYPE.SUCCESS,
-                message: 'Die Buchung wurde erfolgreich entfernt',
-                buttonText: 'OK',
+            isRecurring: isRecurring,
+        });
+    }
 
-            });
-        }).catch(() => {
-            this.notificationService.showNotification({
-                notificationType: NOTIFICATION_TYPE.ERROR,
-                message: 'Die Buchung konnt nicht entfernt werden',
-                buttonText: 'OK',
-
-            });
+    public deleteRecurringPayments(recurringId: string, isRecurring: boolean): void {
+        invoke('delete_recurring_payments', {
+            recurringId: recurringId,
+            isRecurring: isRecurring,
         });
     }
 }

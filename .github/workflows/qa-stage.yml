@@ -5,7 +5,7 @@ on:
       - release
 
 jobs:
-  test-publish-cash-compass:
+  test-publish-finanz-freund:
     permissions:
       contents: write
     strategy:

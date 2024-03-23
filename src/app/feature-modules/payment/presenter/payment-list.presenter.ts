@@ -18,6 +18,8 @@ export class PaymentListPresenter {
         private paymentFacade: PaymentFacade,
         private categoryFacade: CategoryFacade
     ) {
+        this.categoryFacade.loadCategories();
+        this.paymentFacade.loadPayments();
         this.paymentsVm$ = this.paymentsVmSource.asObservable();
 
         combineLatest([
@@ -46,9 +48,12 @@ export class PaymentListPresenter {
             payee: payment.payee,
             incomeOrExpense: payment.incomeOrExpense,
             categoryId: payment.categoryId,
-            categoryName: category?.name ?? 'Zuweisung fehlt'
+            categoryName: category?.name ?? 'Zuweisung fehlt',
+            isRecurring: payment.isRecurring,
+            recurringId: payment.recurringId,
+            recurringStartDate: payment.recurringStartDate,
+            recurringEndDate: payment.recurringEndDate,
+            recurringInterval: payment.recurringInterval
         }
     }
-
-
 }

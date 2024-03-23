@@ -16,6 +16,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
@@ -37,40 +38,41 @@ import { getMatPaginatorIntl } from './utils/paginator-intl';
 @NgModule({
     declarations: [
         AppComponent,
-        PaymentListComponent,
-        NavigationComponent,
-        PaymentModalDialogComponent,
         CategoryListComponent,
         CategoryModalDialogComponent,
+        NavigationComponent,
         NotificationComponent,
+        PaymentListComponent,
+        PaymentModalDialogComponent
     ],
     imports: [
-        BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
+        BrowserModule,
         DatePipe,
-        MatTooltipModule,
-        MatPaginatorModule,
-        MatFormFieldModule,
+        FormsModule,
         MatButtonModule,
+        MatCardModule,
+        MatDatepickerModule,
+        MatDialogModule,
+        MatExpansionModule,
+        MatFormFieldModule,
+        MatGridListModule,
         MatIconModule,
+        MatInputModule,
+        MatListModule,
+        MatNativeDateModule,
+        MatPaginatorModule,
+        MatSelectModule,
+        MatSidenavModule,
+        MatSlideToggleModule,
+        MatSnackBarModule,
         MatSortModule,
         MatTableModule,
         MatToolbarModule,
-        MatInputModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatDialogModule,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        MatSelectModule,
-        MatSidenavModule,
-        MatListModule,
-        MatGridListModule,
+        MatTooltipModule,
         OverlayModule,
-        MatExpansionModule,
-        MatCardModule,
-        MatSnackBarModule
+        ReactiveFormsModule
     ],
     providers: [
         {

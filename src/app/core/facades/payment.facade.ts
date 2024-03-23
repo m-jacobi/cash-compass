@@ -13,28 +13,38 @@ export class PaymentFacade {
     constructor(
         private paymentService: PaymentService,
     ) {
-        this.payments$ = this.paymentsSource.asObservable();
         this.loadPayments();
+        this.payments$ = this.paymentsSource.asObservable();
     }
 
-    private loadPayments(): void {
+    public loadPayments(): void {
         this.paymentService.getPayments().subscribe((payments: PaymentModel[]) => {
-            this.paymentsSource.next(JSON.parse(payments.toString()));
+            this.paymentsSource.next(payments);
         });
     }
 
-    public createPayment(payment: PaymentModel): void {
+    public createPayment(payment: Partial<PaymentModel>): void {
         this.paymentService.createPayment(payment);
         this.loadPayments();
     }
 
-    public updatePayment(payment: PaymentModel): void {
+    public updatePayment(payment: Partial<PaymentModel>): void {
         this.paymentService.updatePayment(payment);
         this.loadPayments();
     }
 
-    public deletePayment(paymentId: string): void {
-        this.paymentService.deletePayment(paymentId);
+    public updateRecurringPayment(payment: Partial<PaymentModel>): void {
+        this.paymentService.updateRecurringPayment(payment);
+        this.loadPayments();
+    }
+
+    public deletePayment(paymentId: string, isRecurring: boolean): void {
+        this.paymentService.deletePayment(paymentId, isRecurring);
+        this.loadPayments();
+    }
+
+    public deleteRecurringPayments(recurringId: string, isRecurring: boolean): void {
+        this.paymentService.deleteRecurringPayments(recurringId, isRecurring);
         this.loadPayments();
     }
 }

@@ -14,13 +14,13 @@ export class CategoryFacade {
     constructor(
         private categoryService: CategoryService,
     ) {
-        this.categories$ = this.categoriesSource.asObservable();
         this.loadCategories();
+        this.categories$ = this.categoriesSource.asObservable();
     }
 
-    private loadCategories(): void {
+    public loadCategories(): void {
         this.categoryService.getCategories().subscribe((categories: CategoryModel[]) => {
-            this.categoriesSource.next(JSON.parse(categories.toString()));
+            this.categoriesSource.next(categories);
         });
     }
 

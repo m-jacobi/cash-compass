@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CategoryFacade } from 'src/app/core/facades/category.facade';
+import { CategoryFacade } from '../../core/facades/category.facade';
 import { CategoryModel } from '../../core/models/category.model';
 
 @Component({
