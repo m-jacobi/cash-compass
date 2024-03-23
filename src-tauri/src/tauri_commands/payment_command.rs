@@ -41,7 +41,6 @@ pub fn create_payment(
         end_date: Some(end_date),
         interval: Some(interval)
     };
-    println!("tauri create payment {:?}", create_payment);
     create_payment_in_db(create_payment);
 }
 
@@ -54,12 +53,38 @@ pub fn update_payment(
     category_id: String,
     payee: String,
     income_or_expense: bool,
+    is_recurring: bool
+) {
+    let update_payment: UpdatePaymentDto = UpdatePaymentDto {
+        id: id,
+        description: description,
+        amount: amount,
+        payment_date: payment_date,
+        category_id: category_id,
+        payee: payee,
+        income_or_expense: income_or_expense,
+        last_modified_on: create_utc_timestamp(),
+        is_recurring: is_recurring,
+    };
+    update_payment_in_db(update_payment);
+}
+
+#[tauri::command]
+pub fn update_recurring_payment(
+    id: String,
+    description: String,
+    amount: f32,
+    payment_date: String,
+    category_id: String,
+    payee: String,
+    income_or_expense: bool,
     is_recurring: bool,
     recurring_id: String,
     end_date: String,
     interval: String
 ) {
-    let update_payment: UpdatePaymentDto = UpdatePaymentDto {
+    let update_recurring_payment: PaymentDto = PaymentDto {
+        id: id,
         description: description,
         amount: amount,
         payment_date: payment_date,
@@ -72,16 +97,15 @@ pub fn update_payment(
         end_date: Some(end_date),
         interval: Some(interval)
     };
-    update_payment_in_db(id, update_payment);
-
+    update_recurring_payment_in_db(&update_recurring_payment);
 }
+
 
 #[tauri::command]
 pub fn delete_payment(
     id: String,
     is_recurring: bool,
 ) {
-    println!("delete_payment");
     delete_payment_from_db(id, is_recurring);
 }
 
@@ -90,7 +114,6 @@ pub fn delete_recurring_payments(
     recurring_id: String,
     is_recurring: bool,
 ) {
-    println!("delete_payment");
     delete_recurring_payments_from_db(recurring_id, is_recurring);
 }
 

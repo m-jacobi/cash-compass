@@ -100,10 +100,11 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
             interval: this.formControl['interval'].value,
         }
 
-        if(this.data.id){
-            this.paymentFacade.updatePayment(payment);
+        if(this.data.id && !this.data.isRecurring){
+            this.paymentFacade.updatePayment(this.fillPaymentUpdateData(payment));
+        } else if(this.data.id && this.data.isRecurring) {
+            this.paymentFacade.updateRecurringPayment(this.fillRecurringPaymentUpdateData(payment));
         } else {
-            console.log('create payment', payment);
             this.paymentFacade.createPayment(payment);
         }
         this.onClose();
@@ -118,5 +119,20 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
         this.ngDestroy.unsubscribe();
     }
 
-    // private fillPayment(): payment
+    private fillPaymentUpdateData(payment: Partial<PaymentModel>): Partial<PaymentModel> {
+        const paymentData: Partial<PaymentModel> = {
+            ...payment,
+            id: this.data.id
+        }
+        return paymentData;
+    }
+
+    private fillRecurringPaymentUpdateData(payment: Partial<PaymentModel>): Partial<PaymentModel> {
+        const paymentData: Partial<PaymentModel> = {
+            ...payment,
+            id: this.data.id,
+            recurringId: this.data.recurringId,
+        }
+        return paymentData;
+    }
 }

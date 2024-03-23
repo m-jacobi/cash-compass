@@ -33,6 +33,11 @@ export class PaymentFacade {
         this.loadPayments();
     }
 
+    public updateRecurringPayment(payment: Partial<PaymentModel>): void {
+        this.paymentService.updateRecurringPayment(payment);
+        this.loadPayments();
+    }
+
     public deletePayment(paymentId: string, isRecurring: boolean): void {
         this.paymentService.deletePayment(paymentId, isRecurring);
         this.loadPayments();

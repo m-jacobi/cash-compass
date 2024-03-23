@@ -42,6 +42,24 @@ export class PaymentService {
             categoryId: payment.categoryId,
             payee: payment.payee,
             incomeOrExpense: payment.incomeOrExpense,
+            isRecurring: payment.isRecurring,
+        });
+    }
+
+    public updateRecurringPayment(payment: Partial<PaymentModel>): void {
+        console.log('updateRecurringPayment', payment);
+        invoke('update_recurring_payment', {
+            id: payment.id,
+            description: payment.description,
+            amount: payment.amount,
+            paymentDate: payment.paymentDate,
+            categoryId: payment.categoryId,
+            payee: payment.payee,
+            incomeOrExpense: payment.incomeOrExpense,
+            isRecurring: payment.isRecurring,
+            recurringId: payment.recurringId,
+            endDate: payment.endDate,
+            interval: payment.interval
         });
     }
 

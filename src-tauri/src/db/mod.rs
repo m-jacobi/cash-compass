@@ -127,48 +127,43 @@ fn calculate_next_payment_date(current_date: &NaiveDate, interval: &str) -> Naiv
     }
 }
 
-pub fn update_payment_in_db(id: String, update_payment_dto: UpdatePaymentDto) {
+pub fn update_payment_in_db(update_payment_dto: UpdatePaymentDto) {
     let connection = &mut db_connection();
 
-    if update_payment_dto.is_recurring {
-        //update_recurring_payments();
-        println!("update recurring payments {:?}", update_payment_dto)
+    if !update_payment_dto.is_recurring {
+        let updated_payment: UpdatePayment = UpdatePayment {
+            description: update_payment_dto.description.clone(),
+            amount: update_payment_dto.amount.clone(),
+            payment_date: update_payment_dto.payment_date.clone(),
+            category_id: update_payment_dto.category_id.clone(),
+            payee: update_payment_dto.payee.clone(),
+            income_or_expense: update_payment_dto.income_or_expense.clone(),
+            last_modified_on: update_payment_dto.last_modified_on.clone(),
+            is_recurring: update_payment_dto.is_recurring.clone(),
+            recurring_id: None,
+            end_date: None,
+            interval: None,
+        };
 
-    } else {
-        update_payment(id, &update_payment_dto,  connection);
+        diesel::update(payments::dsl::payments.find(update_payment_dto.id))
+            .set(updated_payment)
+            .execute(connection)
+            .expect("Error saving update payment");
+
     }
 }
 
-fn update_payment(id: String, update_payment_dto: &UpdatePaymentDto, connection: &mut SqliteConnection) {
-    let updated_payment: UpdatePayment = UpdatePayment {
-        description: update_payment_dto.description.clone(),
-        amount: update_payment_dto.amount.clone(),
-        payment_date: update_payment_dto.payment_date.clone(),
-        category_id: update_payment_dto.category_id.clone(),
-        payee: update_payment_dto.payee.clone(),
-        income_or_expense: update_payment_dto.income_or_expense.clone(),
-        last_modified_on: update_payment_dto.last_modified_on.clone(),
-        is_recurring: update_payment_dto.is_recurring.clone(),
-        recurring_id: None,
-        end_date: None,
-        interval: None,
-    };
+pub fn update_recurring_payment_in_db(update_recurring_payment_dto: &PaymentDto) {
+    let connection = &mut db_connection();
 
-    diesel::update(payments::dsl::payments.find(id))
-        .set(updated_payment)
-        .execute(connection)
-        .expect("Error saving update payment");
+    let recurring_id = update_recurring_payment_dto.recurring_id.as_ref().unwrap().to_string();
+    delete_recurring_payments_from_db(recurring_id, update_recurring_payment_dto.is_recurring);
+    generate_and_insert_recurring_payments(update_recurring_payment_dto, connection);
 }
-
-// fn update_recurring_payments(recurring_id: String, update_payment_dto: &UpdatePaymentDto, connection: &mut SqliteConnection) {
-
-
-// }
-
 
 pub fn delete_payment_from_db(id: String, is_recurring: bool) {
     let connection = &mut db_connection();
-    if(!is_recurring) {
+    if !is_recurring {
         diesel::delete(payments::dsl::payments)
         .filter(payments::id.eq(id))
         .execute(connection)
@@ -178,7 +173,8 @@ pub fn delete_payment_from_db(id: String, is_recurring: bool) {
 
 pub fn delete_recurring_payments_from_db(recurring_id: String, is_recurring: bool) {
     let connection = &mut db_connection();
-    if(is_recurring) {
+    println!("delete_recurring_payments_from_db {:?}", recurring_id);
+    if is_recurring {
         diesel::delete(payments::dsl::payments)
         .filter(payments::recurring_id.eq(recurring_id))
         .execute(connection)
