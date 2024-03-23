@@ -71,8 +71,9 @@ fn generate_and_insert_payments(payment_dto: &PaymentDto, connection: &mut Sqlit
         last_modified_on: payment_dto.last_modified_on.clone(),
         is_recurring: payment_dto.is_recurring.clone(),
         recurring_id: None,
-        end_date: None,
-        interval: None,
+        recurring_start_date: None,
+        recurring_end_date: None,
+        recurring_interval: None,
     };
 
     diesel::insert_into(payments::table)
@@ -83,11 +84,12 @@ fn generate_and_insert_payments(payment_dto: &PaymentDto, connection: &mut Sqlit
 }
 
 fn generate_and_insert_recurring_payments(payment_dto: &PaymentDto, connection: &mut SqliteConnection) {
-    let mut current_date = NaiveDate::parse_from_str(&payment_dto.payment_date, "%Y-%m-%d").unwrap();
+    let date_string = payment_dto.recurring_start_date.as_ref().map_or_else(|| String::new(), |s| s.clone());
+    let mut current_date = NaiveDate::parse_from_str(&date_string, "%Y-%m-%d").unwrap();
 
-    if payment_dto.end_date != None {
-        while match payment_dto.end_date  {
-            Some(ref end_date) => current_date.to_string() <= end_date.to_string(),
+    if payment_dto.recurring_end_date != None {
+        while match payment_dto.recurring_end_date  {
+            Some(ref recurring_end_date) => current_date.to_string() <= recurring_end_date.to_string(),
             None => false,
             } {
             let recurring_payment = Payment {
@@ -101,8 +103,9 @@ fn generate_and_insert_recurring_payments(payment_dto: &PaymentDto, connection: 
                 last_modified_on: payment_dto.last_modified_on.clone(),
                 is_recurring: payment_dto.is_recurring.clone(),
                 recurring_id: payment_dto.recurring_id.clone(),
-                end_date: payment_dto.end_date.clone(),
-                interval: payment_dto.interval.clone(),
+                recurring_start_date: payment_dto.recurring_start_date.clone(),
+                recurring_end_date: payment_dto.recurring_end_date.clone(),
+                recurring_interval: payment_dto.recurring_interval.clone(),
             };
 
             diesel::insert_into(payments::table)
@@ -110,7 +113,7 @@ fn generate_and_insert_recurring_payments(payment_dto: &PaymentDto, connection: 
                 .execute(connection)
                 .expect("Error saving new recurring payment");
 
-            let interval = recurring_payment.interval.as_ref().unwrap();
+            let interval = recurring_payment.recurring_interval.as_ref().unwrap();
             current_date = calculate_next_payment_date(&current_date, interval);
         }
     }
@@ -141,8 +144,9 @@ pub fn update_payment_in_db(update_payment_dto: UpdatePaymentDto) {
             last_modified_on: update_payment_dto.last_modified_on.clone(),
             is_recurring: update_payment_dto.is_recurring.clone(),
             recurring_id: None,
-            end_date: None,
-            interval: None,
+            recurring_start_date: None,
+            recurring_end_date: None,
+            recurring_interval: None,
         };
 
         diesel::update(payments::dsl::payments.find(update_payment_dto.id))
@@ -173,7 +177,6 @@ pub fn delete_payment_from_db(id: String, is_recurring: bool) {
 
 pub fn delete_recurring_payments_from_db(recurring_id: String, is_recurring: bool) {
     let connection = &mut db_connection();
-    println!("delete_recurring_payments_from_db {:?}", recurring_id);
     if is_recurring {
         diesel::delete(payments::dsl::payments)
         .filter(payments::recurring_id.eq(recurring_id))

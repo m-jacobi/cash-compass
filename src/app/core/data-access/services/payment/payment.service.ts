@@ -28,8 +28,9 @@ export class PaymentService {
             payee: payment.payee,
             incomeOrExpense: payment.incomeOrExpense,
             isRecurring: payment.isRecurring,
-            endDate: payment.endDate,
-            interval: payment.interval
+            recurringStartDate: payment.recurringStartDate,
+            recurringEndDate: payment.recurringEndDate,
+            recurringInterval: payment.recurringInterval
         });
     }
 
@@ -47,7 +48,6 @@ export class PaymentService {
     }
 
     public updateRecurringPayment(payment: Partial<PaymentModel>): void {
-        console.log('updateRecurringPayment', payment);
         invoke('update_recurring_payment', {
             id: payment.id,
             description: payment.description,
@@ -58,8 +58,9 @@ export class PaymentService {
             incomeOrExpense: payment.incomeOrExpense,
             isRecurring: payment.isRecurring,
             recurringId: payment.recurringId,
-            endDate: payment.endDate,
-            interval: payment.interval
+            recurringStartDate: payment.recurringStartDate,
+            recurringEndDate: payment.recurringEndDate,
+            recurringInterval: payment.recurringInterval
         });
     }
 

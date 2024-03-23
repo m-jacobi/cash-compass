@@ -16,8 +16,9 @@ pub struct Payment {
     pub last_modified_on: String,
     pub is_recurring: bool,
     pub recurring_id: Option<String>,
-    pub end_date: Option<String>,
-    pub interval: Option<String>,
+    pub recurring_start_date: Option<String>,
+    pub recurring_end_date: Option<String>,
+    pub recurring_interval: Option<String>,
 }
 
 #[derive(Insertable, Serialize, Debug, Clone, AsChangeset)]
@@ -33,8 +34,9 @@ pub struct UpdatePayment {
     pub last_modified_on: String,
     pub is_recurring: bool,
     pub recurring_id: Option<String>,
-    pub end_date: Option<String>,
-    pub interval: Option<String>,
+    pub recurring_start_date: Option<String>,
+    pub recurring_end_date: Option<String>,
+    pub recurring_interval: Option<String>,
 }
 
 #[derive(Insertable, Queryable, Serialize, Debug, AsChangeset)]

@@ -5,7 +5,10 @@ ALTER TABLE payments
 ADD COLUMN recurring_id VARCHAR;
 
 ALTER TABLE payments
-ADD COLUMN end_date TEXT;
+ADD COLUMN recurring_start_date TEXT;
 
 ALTER TABLE payments
-ADD COLUMN interval TEXT CHECK (interval IN ('DAY', 'WEEK', 'MONTH', 'YEAR'));
+ADD COLUMN recurring_end_date TEXT;
+
+ALTER TABLE payments
+ADD COLUMN recurring_interval TEXT CHECK (recurring_interval IN ('DAY', 'WEEK', 'MONTH', 'YEAR'));

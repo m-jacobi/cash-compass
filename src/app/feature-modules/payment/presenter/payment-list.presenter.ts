@@ -51,8 +51,9 @@ export class PaymentListPresenter {
             categoryName: category?.name ?? 'Zuweisung fehlt',
             isRecurring: payment.isRecurring,
             recurringId: payment.recurringId,
-            endDate: payment.endDate,
-            interval: payment.interval
+            recurringStartDate: payment.recurringStartDate,
+            recurringEndDate: payment.recurringEndDate,
+            recurringInterval: payment.recurringInterval
         }
     }
 }

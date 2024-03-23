@@ -10,6 +10,7 @@ export interface PaymentListVM {
     categoryName: string;
     isRecurring: boolean;
     recurringId?: string;
-    endDate?: string;
-    interval?: RECURRING_INTERVAL
+    recurringStartDate?: string;
+    recurringEndDate?: string;
+    recurringInterval?: RECURRING_INTERVAL
 }

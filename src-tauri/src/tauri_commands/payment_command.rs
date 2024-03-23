@@ -18,8 +18,9 @@ pub fn create_payment(
     payee: String,
     income_or_expense: bool,
     is_recurring: bool,
-    end_date: String,
-    interval: String
+    recurring_start_date: String,
+    recurring_end_date: String,
+    recurring_interval: String
 ) {
     let mut recurring_id: Option<String> = None;
 
@@ -38,8 +39,9 @@ pub fn create_payment(
         last_modified_on: create_utc_timestamp(),
         is_recurring: is_recurring,
         recurring_id: recurring_id,
-        end_date: Some(end_date),
-        interval: Some(interval)
+        recurring_start_date: Some(recurring_start_date),
+        recurring_end_date: Some(recurring_end_date),
+        recurring_interval: Some(recurring_interval)
     };
     create_payment_in_db(create_payment);
 }
@@ -80,8 +82,9 @@ pub fn update_recurring_payment(
     income_or_expense: bool,
     is_recurring: bool,
     recurring_id: String,
-    end_date: String,
-    interval: String
+    recurring_start_date: String,
+    recurring_end_date: String,
+    recurring_interval: String
 ) {
     let update_recurring_payment: PaymentDto = PaymentDto {
         id: id,
@@ -94,8 +97,9 @@ pub fn update_recurring_payment(
         last_modified_on: create_utc_timestamp(),
         is_recurring: is_recurring,
         recurring_id: Some(recurring_id),
-        end_date: Some(end_date),
-        interval: Some(interval)
+        recurring_start_date: Some(recurring_start_date),
+        recurring_end_date: Some(recurring_end_date),
+        recurring_interval: Some(recurring_interval)
     };
     update_recurring_payment_in_db(&update_recurring_payment);
 }

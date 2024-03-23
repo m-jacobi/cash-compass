@@ -10,7 +10,6 @@ pub fn get_categories() -> Result<String, String> {
 
 #[tauri::command]
 pub fn create_category(name: String, default_category: bool) {
-    println!("Message from Rust:");
     let create_category = Category {
         id: create_uuid(),
         name: name,

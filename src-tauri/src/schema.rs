@@ -21,8 +21,9 @@ diesel::table! {
         last_modified_on -> Text,
         is_recurring -> Bool,
         recurring_id -> Nullable<Text>,
-        end_date -> Nullable<Text>,
-        interval -> Nullable<Text>,
+        recurring_start_date -> Nullable<Text>,
+        recurring_end_date -> Nullable<Text>,
+        recurring_interval -> Nullable<Text>,
     }
 }
 

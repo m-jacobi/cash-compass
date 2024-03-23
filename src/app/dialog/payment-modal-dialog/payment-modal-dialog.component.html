@@ -70,14 +70,14 @@
                 <input
                     autocomplete="off"
                     matInput
-                    formControlName="endDate"
-                    [matDatepicker]="endDate">
-                <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
-                <mat-datepicker #endDate></mat-datepicker>
+                    formControlName="recurringEndDate"
+                    [matDatepicker]="recurringEndDate">
+                <mat-datepicker-toggle matSuffix [for]="recurringEndDate"></mat-datepicker-toggle>
+                <mat-datepicker #recurringEndDate></mat-datepicker>
             </mat-form-field>
             <mat-form-field *ngIf="categories" class="payment-form__income-or-expense" appearance="fill">
                 <mat-label>Wiederholen</mat-label>
-                <mat-select formControlName="interval">
+                <mat-select formControlName="recurringInterval">
                     <mat-option
                         *ngFor="let recurringInterval of recurringIntervals" [value]="recurringInterval.value">
                         {{ recurringInterval.text }}

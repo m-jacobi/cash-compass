@@ -11,8 +11,9 @@ export interface PaymentModel {
     incomeOrExpense: boolean;
     isRecurring: boolean;
     recurringId?: string;
-    endDate?: string;
-    interval?: RECURRING_INTERVAL
+    recurringStartDate?: string;
+    recurringEndDate?: string;
+    recurringInterval?: RECURRING_INTERVAL
 };
 
 export const EMPTY_PAYMENT: PaymentModel = {

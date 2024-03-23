@@ -74,8 +74,8 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
             payee: new FormControl<string>(this.data.payee),
             incomeOrExpense: new FormControl<boolean>(this.data.incomeOrExpense, [Validators.required]),
             isRecurring: new FormControl<boolean>(this.data.isRecurring, [Validators.required]),
-            endDate: new FormControl<string>(this.data.endDate ? format(new Date(this.data.endDate), 'yyyy-MM-dd') : ''),
-            interval: new FormControl<RECURRING_INTERVAL | string>(this.data.interval ?? '')
+            recurringEndDate: new FormControl<string>(this.data.recurringEndDate ? format(new Date(this.data.recurringEndDate), 'yyyy-MM-dd') : ''),
+            recurringInterval: new FormControl<RECURRING_INTERVAL | string>(this.data.recurringInterval ?? '')
         });
     }
 
@@ -88,16 +88,18 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
     }
 
     public savePayment(): void {
+        const paymentDate: string = format(new Date(this.formControl['paymentDate'].value), 'yyyy-MM-dd');
         const payment: Partial<PaymentModel> = {
             description: this.formControl['description'].value,
             amount: this.formControl['amount'].value,
-            paymentDate: format(new Date(this.formControl['paymentDate'].value), 'yyyy-MM-dd'),
+            paymentDate: paymentDate,
             categoryId: this.formControl['category'].value,
             payee: this.formControl['payee'].value,
             incomeOrExpense: this.formControl['incomeOrExpense'].value,
             isRecurring: this.formControl['isRecurring'].value,
-            endDate: this.formControl['endDate'].value ? format(new Date(this.formControl['endDate'].value), 'yyyy-MM-dd') : '',
-            interval: this.formControl['interval'].value,
+            recurringStartDate: paymentDate,
+            recurringEndDate: this.formControl['recurringEndDate'].value ? format(new Date(this.formControl['recurringEndDate'].value), 'yyyy-MM-dd') : '',
+            recurringInterval: this.formControl['recurringInterval'].value,
         }
 
         if(this.data.id && !this.data.isRecurring){
@@ -128,11 +130,22 @@ export class PaymentModalDialogComponent implements OnInit, OnDestroy {
     }
 
     private fillRecurringPaymentUpdateData(payment: Partial<PaymentModel>): Partial<PaymentModel> {
-        const paymentData: Partial<PaymentModel> = {
+        let paymentData: Partial<PaymentModel> = {
             ...payment,
             id: this.data.id,
             recurringId: this.data.recurringId,
+            recurringStartDate: this.data.recurringStartDate,
         }
+
+        if(this.data.paymentDate !== payment.paymentDate) {
+            paymentData = {
+                ...payment,
+                id: this.data.id,
+                recurringId: this.data.recurringId,
+                recurringStartDate: payment.paymentDate
+            }
+        }
+
         return paymentData;
     }
 }
