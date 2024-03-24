@@ -137,12 +137,16 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public openCreatePaymentDialog(): void {
         this.dialog.open(PaymentModalDialogComponent, {
+            minWidth: '482px',
+            minHeight: '620px',
             data: EMPTY_PAYMENT
         });
     }
 
     public openEditPaymentDialog(payment: PaymentListVM): void {
         this.dialog.open(PaymentModalDialogComponent, {
+            minWidth: '482px',
+            minHeight: '620px',
             data: payment
         });
     }

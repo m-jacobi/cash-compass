@@ -27,7 +27,7 @@ export class NavigationComponent implements OnInit {
 
     public openCreatePaymentDialog() {
         const createDialogRef = this.dialog.open(PaymentModalDialogComponent, {
-            minWidth: '500px',
+            minWidth: '482px',
             minHeight: '620px',
             data: EMPTY_PAYMENT
         });
