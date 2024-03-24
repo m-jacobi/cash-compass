@@ -24,6 +24,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BaseChartDirective } from 'ng2-charts';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
@@ -31,6 +32,8 @@ import { NotificationComponent } from './components/notification/notification.co
 import { CategoryModalDialogComponent } from './dialog/category-modal-dialog/category-modal-dialog.component';
 import { PaymentModalDialogComponent } from './dialog/payment-modal-dialog/payment-modal-dialog.component';
 import { CategoryListComponent } from './feature-modules/category/components/category-list/category-list.component';
+import { IncomeExpenseComponent } from './feature-modules/dashboard/components/income-expense/income-expense.component';
+import { DashboardComponent } from './feature-modules/dashboard/views/dashboard/dashboard.component';
 import { PaymentListComponent } from './feature-modules/payment/components/payment-list/payment-list.component';
 import { getMatPaginatorIntl } from './utils/paginator-intl';
 
@@ -43,7 +46,9 @@ import { getMatPaginatorIntl } from './utils/paginator-intl';
         NavigationComponent,
         NotificationComponent,
         PaymentListComponent,
-        PaymentModalDialogComponent
+        PaymentModalDialogComponent,
+        DashboardComponent,
+        IncomeExpenseComponent
     ],
     imports: [
         AppRoutingModule,
@@ -72,7 +77,8 @@ import { getMatPaginatorIntl } from './utils/paginator-intl';
         MatToolbarModule,
         MatTooltipModule,
         OverlayModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        BaseChartDirective
     ],
     providers: [
         {
