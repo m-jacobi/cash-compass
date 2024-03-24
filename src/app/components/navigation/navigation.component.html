@@ -5,8 +5,14 @@
         [opened]="!(breakpoint$ | async)">
         <mat-toolbar>Finanz Freund</mat-toolbar>
         <mat-nav-list>
-            <a mat-list-item routerLink="payments">Buchungen</a>
-            <a mat-list-item routerLink="categories">Kategorien</a>
+            <a mat-list-item routerLink="payments">
+                <mat-icon fontIcon="payments"></mat-icon>
+                Buchungen
+            </a>
+            <a mat-list-item routerLink="categories">
+                <mat-icon fontIcon="category"></mat-icon>
+                Kategorien
+            </a>
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
