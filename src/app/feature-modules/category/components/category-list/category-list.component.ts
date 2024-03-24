@@ -70,12 +70,16 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public openCreateCategoryDialog(): void {
         this.dialog.open(CategoryModalDialogComponent, {
+            minWidth: '482px',
+            minHeight: '200px',
             data: EMPTY_CATEGORY
         });
     }
 
     public openEditCategoryDialog(category: CategoryModel): void {
         this.dialog.open(CategoryModalDialogComponent, {
+            minWidth: '482px',
+            minHeight: '200px',
             data: category
         });
     }

@@ -28,7 +28,6 @@
                 <input  matInput formControlName="payee" placeholder="Zahlungsempfänger">
             </mat-form-field>
         </div>
-
         <div>
             <mat-form-field class="payment-form__amount" appearance="fill" floatLabel="always">
                 <mat-label>Betrag</mat-label>
@@ -90,9 +89,9 @@
         </ng-container>
     </div>
 
-    <div mat-dialog-actions class="payment-dialog__buttons">
-        <button mat-raised-button class="payment-dialog__button-close" (click)="onClose()">Abbrechen</button>
+    <mat-dialog-actions class="payment-form__buttons" align="end">
+        <button mat-raised-button (click)="onClose()">Abbrechen</button>
         <button mat-raised-button type="submit" color="primary" (click)="savePayment()" [disabled]="paymentForm.invalid">Speichern</button>
-    </div>
+    </mat-dialog-actions>
 </form>
 

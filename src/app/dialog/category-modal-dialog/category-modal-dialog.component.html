@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>{{data.id ? 'Kategorie bearbeiten' : 'Neue Kategorie erstellen'}}</h2>
 <form [formGroup]="categoryForm">
     <div class="category-form">
-        <mat-form-field class="category-form__name" appearance="outline">
+        <mat-form-field class="category-form__name" appearance="fill">
             <mat-label>Kategorie</mat-label>
             <input matInput formControlName="name" placeholder="Kategorie">
             <mat-error *ngIf="formControl['name'].invalid && formControl['name'].touched">
@@ -10,9 +10,9 @@
         </mat-form-field>
     </div>
 </form>
-<div class="category-dialog__buttons">
-    <button mat-raised-button class="category-dialog__button-close" (click)="onClose()">Abbrechen</button>
+<mat-dialog-actions class="category-form__buttons" align="end">
+    <button mat-raised-button (click)="onClose()">Abbrechen</button>
     <button mat-raised-button type="submit" color="primary" (click)="saveCategory()" [disabled]="categoryForm.invalid">Speichern</button>
-</div>
+</mat-dialog-actions>
 
 

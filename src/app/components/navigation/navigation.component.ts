@@ -28,13 +28,15 @@ export class NavigationComponent implements OnInit {
     public openCreatePaymentDialog() {
         const createDialogRef = this.dialog.open(PaymentModalDialogComponent, {
             minWidth: '482px',
-            minHeight: '620px',
+            minHeight: '590px',
             data: EMPTY_PAYMENT
         });
     }
 
     public openCreateCategoryDialog(): void {
         const createDialogRef = this.dialog.open(CategoryModalDialogComponent, {
+            minWidth: '482px',
+            minHeight: '200px',
             data: EMPTY_CATEGORY
         });
     }
