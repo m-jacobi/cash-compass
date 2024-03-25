@@ -24,7 +24,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BaseChartDirective } from 'ng2-charts';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
@@ -77,8 +76,7 @@ import { getMatPaginatorIntl } from './utils/paginator-intl';
         MatToolbarModule,
         MatTooltipModule,
         OverlayModule,
-        ReactiveFormsModule,
-        BaseChartDirective
+        ReactiveFormsModule
     ],
     providers: [
         {
