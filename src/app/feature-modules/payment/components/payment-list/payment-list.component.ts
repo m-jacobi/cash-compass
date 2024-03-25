@@ -69,6 +69,7 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public ngOnInit(): void {
+        this.paymentFacade.loadPayments();
         this.loadPayments();
     }
 
