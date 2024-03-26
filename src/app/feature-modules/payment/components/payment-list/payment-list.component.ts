@@ -5,7 +5,7 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { compareAsc, format } from 'date-fns';
-import { Subject, from, groupBy, mergeMap, of, reduce, takeUntil, toArray, zip } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { PaymentFacade } from '../../../../core/facades/payment.facade';
 import { EMPTY_PAYMENT } from '../../../../core/models/payment.model';
 import { PaymentModalDialogComponent } from '../../../../dialog/payment-modal-dialog/payment-modal-dialog.component';
@@ -69,100 +69,6 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public ngOnInit(): void {
         this.loadPayments();
-    }
-
-    private loadPayments(): void {
-        this.paymentListPresenter.paymentsVM$.pipe(takeUntil(this.ngDestroy)).subscribe((payments: PaymentListVM[]) => {
-            this.payments = payments;
-            this.totalIncomeCost = this.calculationService.getTotalIncomeCost(this.payments);
-            this.totalExpenseCost = this.calculationService.getTotalExpenseCost(this.payments);
-            this.paymentDataSource.data = this.payments;
-        });
-
-        const source = from(this.payments);
-
-        const example = source.pipe(
-            groupBy(payment => payment.categoryName),
-            // return each item in group as array
-            mergeMap(group => group.pipe(toArray()))
-            );
-        //const subscribe = example.subscribe(val => console.log(val));
-
-        const test = source.pipe(
-            groupBy(
-                (person: PaymentListVM) => person.categoryName,
-                (p: PaymentListVM) => p.amount
-            ),
-            mergeMap(group => zip(of(group.key), group.pipe(toArray())))
-            )
-            .subscribe(console.log);
-
-        // const foo = source.pipe(
-        //     groupBy(datum => datum.categoryName), // Nach Kategorie gruppieren
-        //     mergeMap(group => group.pipe(
-        //         toArray(), // Gruppe in ein Array umwandeln
-        //         mergeMap(groupedItems => {
-        //             const date = groupedItems[0].paymentDate; // Datum aus dem ersten Element der Gruppe erhalten
-        //             return groupedItems.map(item => ({ ...item, date }));
-        //         })
-        //     ))
-        // )
-        // .subscribe(groupedItem => console.log('groupedItem', groupedItem.categoryName, groupedItem.amount, groupedItem.paymentDate));
-
-
-        // const faa = source.pipe(
-        //     groupBy(
-        //         (payment: PaymentListVM) => payment.categoryName
-        //     ),
-        //     mergeMap(group => group.pipe(
-        //         reduce((acc: unknown, curr: PaymentListVM) => ({
-        //             categoryName: curr.categoryName,
-        //             amount: (acc as any)?.amount + curr.amount,
-        //             dates: [...(acc as any)?.dates || [], curr.paymentDate]
-        //         }), {}),
-        //         toArray(),
-        //         mergeMap((accumulated: any) => ({
-        //             categoryName: accumulated.categoryName,
-        //             amount: accumulated.amount,
-        //             dates: accumulated.dates
-        //         }))
-        //     ))
-        // );
-
-        const faa = source.pipe(
-            groupBy(
-                (payment: PaymentListVM) => payment.categoryName
-            ),
-            mergeMap(group => group.pipe(
-                reduce((acc: { categoryName: string, amount: number, dates: string[] }, curr: PaymentListVM) => {
-                    return {
-                        categoryName: curr.categoryName,
-                        amount: (acc.amount || 0) + curr.amount,
-                        dates: [...(acc.dates || []), curr.paymentDate]
-                    };
-                }, { categoryName: '', amount: 0, dates: [] }),
-                toArray()
-            ))
-        );
-
-
-        faa.subscribe(console.log);
-
-
-
-
-
-    }
-
-    private bindFormChanges(): void {
-        this.filterDateForm.valueChanges
-            .pipe(takeUntil(this.ngDestroy))
-            .subscribe((values: DateRange) => {
-                if(values.fromDate && values.toDate) {
-                    this.filterDate(values)
-                }
-            });
-
     }
 
     public ngAfterViewInit(): void {
@@ -230,5 +136,26 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.paymentFacade.deleteRecurringPayments(recurringId, isRecurring);
         }
+    }
+
+    private loadPayments(): void {
+        this.paymentListPresenter.paymentsVM$.pipe(
+            takeUntil(this.ngDestroy)
+        ).subscribe((payments: PaymentListVM[]) => {
+            this.payments = payments;
+            this.totalIncomeCost = this.calculationService.getTotalIncomeCost(this.payments);
+            this.totalExpenseCost = this.calculationService.getTotalExpenseCost(this.payments);
+            this.paymentDataSource.data = this.payments;
+        });
+    }
+
+    private bindFormChanges(): void {
+        this.filterDateForm.valueChanges
+            .pipe(takeUntil(this.ngDestroy))
+            .subscribe((values: DateRange) => {
+                if(values.fromDate && values.toDate) {
+                    this.filterDate(values)
+                }
+            });
     }
 }

@@ -8,7 +8,7 @@ import { PaymentListComponent } from './feature-modules/payment/components/payme
 const routes: Routes = [
     {
         path: '',
-        component: DashboardComponent,
+        component: PaymentListComponent,
     },
     {
         path: 'dashboard',

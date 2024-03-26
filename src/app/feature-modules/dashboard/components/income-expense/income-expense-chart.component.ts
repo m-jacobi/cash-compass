@@ -10,11 +10,11 @@ export interface DataModel {
   }
 
 @Component({
-    selector: 'app-income-expense',
-    templateUrl: './income-expense.component.html',
-    styleUrls: ['./income-expense.component.css']
+    selector: 'app-income-expense-chart',
+    templateUrl: './income-expense-chart.component.html',
+    styleUrls: ['./income-expense-chart.component.css']
 })
-export class IncomeExpenseComponent implements OnInit {
+export class IncomeExpenseChartComponent implements OnInit {
 
     private payments: PaymentListVM[] = [];
     private readonly ngDestroy = new Subject<void>();
