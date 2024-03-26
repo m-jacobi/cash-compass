@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject, combineLatest, map } from 'rxjs';
+import { Observable, combineLatest, map } from 'rxjs';
 import { CategoryFacade } from '../../../core/facades/category.facade';
 import { PaymentFacade } from '../../../core/facades/payment.facade';
 import { CategoryModel } from '../../../core/models/category.model';
@@ -10,19 +10,16 @@ import { PaymentListVM } from '../models/payment.vm';
 @Injectable({providedIn: 'root'})
 export class PaymentListPresenter {
 
-    public paymentsVm$: Observable<PaymentListVM[]>;
-    private paymentsVmSource = new ReplaySubject<PaymentListVM[]>(1);
+    public paymentsVM$:  Observable<PaymentListVM[]>;
     private categoryDict: TDictionary<CategoryModel> = {};
 
     constructor(
         private paymentFacade: PaymentFacade,
         private categoryFacade: CategoryFacade
     ) {
-        this.categoryFacade.loadCategories();
-        this.paymentFacade.loadPayments();
-        this.paymentsVm$ = this.paymentsVmSource.asObservable();
 
-        combineLatest([
+
+        this.paymentsVM$ = combineLatest([
             this.paymentFacade.payments$,
             this.categoryFacade.categories$,
         ]).pipe(
@@ -33,9 +30,7 @@ export class PaymentListPresenter {
                 }
             ),
             map((payments: PaymentModel[]) => payments.map((payment: PaymentModel) => this.mapToVm(payment)))
-        ).subscribe((payments: PaymentListVM[]) => {
-            this.paymentsVmSource.next(payments)
-        });
+        );
     }
 
     private mapToVm(payment: PaymentModel): PaymentListVM {

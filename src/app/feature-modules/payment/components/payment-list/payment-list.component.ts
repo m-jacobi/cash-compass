@@ -6,6 +6,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { compareAsc, format } from 'date-fns';
 import { Subject, takeUntil } from 'rxjs';
+import { CategoryFacade } from 'src/app/core/facades/category.facade';
 import { PaymentFacade } from '../../../../core/facades/payment.facade';
 import { EMPTY_PAYMENT } from '../../../../core/models/payment.model';
 import { PaymentModalDialogComponent } from '../../../../dialog/payment-modal-dialog/payment-modal-dialog.component';
@@ -36,6 +37,7 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     constructor(
         private paymentFacade: PaymentFacade,
+        private categoryFacade: CategoryFacade,
         private paymentListPresenter: PaymentListPresenter,
         private dialog: MatDialog,
         private calculationService: CalculationService,
@@ -69,12 +71,13 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public ngOnInit(): void {
+        this.categoryFacade.loadCategories();
         this.paymentFacade.loadPayments();
         this.loadPayments();
     }
 
     private loadPayments(): void {
-        this.paymentListPresenter.paymentsVm$.pipe(takeUntil(this.ngDestroy)).subscribe((payments: PaymentListVM[]) => {
+        this.paymentListPresenter.paymentsVM$.pipe(takeUntil(this.ngDestroy)).subscribe((payments: PaymentListVM[]) => {
             this.payments = payments;
             this.totalIncomeCost = this.calculationService.getTotalIncomeCost(this.payments);
             this.totalExpenseCost = this.calculationService.getTotalExpenseCost(this.payments);
