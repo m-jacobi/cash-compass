@@ -66,7 +66,6 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
                 text: 'Ausgabe',
             }
         ];
-
         this.bindFormChanges();
     }
 

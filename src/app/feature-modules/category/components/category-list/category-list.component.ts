@@ -90,6 +90,6 @@ export class CategoryListComponent implements OnInit, OnDestroy, AfterViewInit {
                 notificationType: NOTIFICATION_TYPE.SUCCESS,
                 message: 'Die Kategorie ist mit keiner bestehenden Buchung verbunden und wurde somit erfolgeich entfernt',
                 buttonText: 'OK'
-            });
+        });
     }
 }
