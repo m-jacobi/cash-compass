@@ -17,8 +17,6 @@ export class PaymentListPresenter {
         private paymentFacade: PaymentFacade,
         private categoryFacade: CategoryFacade
     ) {
-
-
         this.paymentsVM$ = combineLatest([
             this.paymentFacade.payments$,
             this.categoryFacade.categories$,

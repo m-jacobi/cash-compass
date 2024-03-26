@@ -5,8 +5,7 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { compareAsc, format } from 'date-fns';
-import { Subject, takeUntil } from 'rxjs';
-import { CategoryFacade } from 'src/app/core/facades/category.facade';
+import { Subject, from, groupBy, mergeMap, of, takeUntil, toArray, zip } from 'rxjs';
 import { PaymentFacade } from '../../../../core/facades/payment.facade';
 import { EMPTY_PAYMENT } from '../../../../core/models/payment.model';
 import { PaymentModalDialogComponent } from '../../../../dialog/payment-modal-dialog/payment-modal-dialog.component';
@@ -37,7 +36,6 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     constructor(
         private paymentFacade: PaymentFacade,
-        private categoryFacade: CategoryFacade,
         private paymentListPresenter: PaymentListPresenter,
         private dialog: MatDialog,
         private calculationService: CalculationService,
@@ -70,8 +68,6 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public ngOnInit(): void {
-        this.categoryFacade.loadCategories();
-        this.paymentFacade.loadPayments();
         this.loadPayments();
     }
 
@@ -82,6 +78,27 @@ export class PaymentListComponent implements OnInit, OnDestroy, AfterViewInit {
             this.totalExpenseCost = this.calculationService.getTotalExpenseCost(this.payments);
             this.paymentDataSource.data = this.payments;
         });
+
+        const source = from(this.payments);
+
+        const example = source.pipe(
+            groupBy(payment => payment.categoryName),
+            // return each item in group as array
+            mergeMap(group => group.pipe(toArray()))
+            );
+        //const subscribe = example.subscribe(val => console.log(val));
+
+        const test = source.pipe(
+            groupBy(
+                (person: PaymentListVM) => person.categoryName,
+                (p: PaymentListVM) => p.amount
+            ),
+            mergeMap(group => zip(of(group.key), group.pipe(toArray())))
+            )
+            .subscribe(console.log);
+
+
+
     }
 
     private bindFormChanges(): void {
